@@ -13,8 +13,10 @@ from jmetal.util.termination_criterion import StoppingByEvaluations
 from jmetal.lab.visualization.plotting import Plot
 from jmetal.util.solution import get_non_dominated_solutions
 
+from dfom import DFOM
+
 if __name__ == "__main__":
-    problem = DTLZ2()
+    problem = DFOM()
     problem.reference_front = read_solutions(filename="resources/reference_front/DTLZ2.3D.pf")
 
     max_evaluations = 20000
