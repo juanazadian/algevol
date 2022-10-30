@@ -3,10 +3,6 @@ from solution import GraphSolution
 from abc import ABC
 import random
 
-# random list with numbers from 1 to 62
-def random_list():
-    return random.sample(range(1, 63), 62)
-
 class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Montevideo
 
     def __init__(self, number_of_variables: int = 62, number_of_objectives=2):
