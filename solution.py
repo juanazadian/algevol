@@ -1,9 +1,14 @@
 from jmetal.core.solution import Solution
+from typing import List
 
-class GraphSolution(Solution):
+
+GraphType = List[int] # La primer lista es la 
+class GraphSolution(Solution[GraphType]):
     """ Class representing Graph solutions """
 
-    def __init__(self, number_of_variables: int, number_of_objectives: int, number_of_constraints: int = 0):
+# Number of variables, va a ser la cantidad de barrios de Montevideo. Y cada una de esas variables va a ser una lista de enteros.
+# Osea, los barrios adyacentes. 
+    def __init__(self, number_of_variables: int = 62, number_of_objectives: int = 2, number_of_constraints: int = 0): 
         super(GraphSolution, self).__init__(number_of_variables, number_of_objectives, number_of_constraints)
 
     def __copy__(self):
@@ -11,7 +16,7 @@ class GraphSolution(Solution):
             self.number_of_variables,
             self.number_of_objectives)
         new_solution.objectives = self.objectives[:]
-        new_solution.variables = self.variables[:]
+        new_solution.variables = self.variables[:] # Nose si está bien esto. Tiene que ser una copia de toda la lista de adyacencia.
 
         new_solution.attributes = self.attributes.copy()
 

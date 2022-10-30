@@ -13,7 +13,9 @@ from jmetal.util.termination_criterion import StoppingByEvaluations
 from jmetal.lab.visualization.plotting import Plot
 from jmetal.util.solution import get_non_dominated_solutions
 
-from dfom import DFOM
+from problem import DFOM
+from mutation import GraphMutation
+from crossover import GraphCrossover
 
 if __name__ == "__main__":
     problem = DFOM()
@@ -24,8 +26,8 @@ if __name__ == "__main__":
         problem=problem,
         population_size=20,
         offspring_population_size=20,
-        mutation=PolynomialMutation(probability=1.0 / problem.number_of_variables, distribution_index=20),
-        crossover=SBXCrossover(probability=1.0, distribution_index=20),
+        mutation=GraphMutation(probability=1.0 / problem.number_of_variables, distribution_index=20),
+        crossover=GraphCrossover(probability=0.5), # Se puede ajustar esa probabilidad.
         termination_criterion=StoppingByEvaluations(max_evaluations=max_evaluations),
     )
 
