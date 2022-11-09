@@ -1,64 +1,110 @@
 import random
 
-barrios_montevideo = [ (0,"Central"), (1,"Pocitos"), (2,"La Blanqueada"),
-(3,"Tres Cruces"), (4,"Punta Carretas"), (5,"Centro")]
-grafo_barrios_montevideo = [ [(1, 6), (2, 1), (3, 5)], [(0, 6), (2, 5), (4, 3)], 
-[(0, 1), (1, 5), (4, 6), (5, 4), (3, 5)], [(0, 5), (2, 5), (5, 2)],
- [(1, 3), (2, 6), (4, 6)], [(4, 6), (2, 4), (3, 2)] ]
+def dfs(visited, graph, node):
+    if node not in visited:
+        visited += [node]
+        for neighbour in graph[node]:
+            dfs(visited, graph, neighbour)
+
+class TEST:
+
+    def __init__(self):
+        self.barrios_montevideo = [ (0, "Central", 0), (1,"Pocitos", 110000), (2, "La Blanqueada", 80000),
+        (3, "Tres Cruces", 20000), (4, "Punta Carretas", 40000), (5 , "Centro", 130000)]
+        self.grafo_barrios_montevideo = [ [(1, 6), (2, 1), (3, 5)], [(0, 6), (2, 5), (4, 3)],
+        [(0, 1), (1, 5), (4, 6), (5, 4), (3, 5)], [(0, 5), (2, 5), (5, 2)],
+        [(1, 3), (2, 6), (4, 6)], [(4, 6), (2, 4), (3, 2)] ]
 
 
-def sum_solution_costs2(solution):
-    sum = 0
-    for index, node in enumerate(solution):
-        for neighbor in node:
-            sum += [nbh[1] for nbh in grafo_barrios_montevideo[index] if nbh[0] == neighbor][0]
-    return sum/2
+    def sum_solution_costs(self, solution):
+        sum = 0
+        for index, node in enumerate(solution):
+            for neighbor in node:
+                sum += [nbh[1] for nbh in self.grafo_barrios_montevideo[index] if nbh[0] == neighbor][0]
+        return sum/2
 
-def sum_solution_costs(solution):
-    sum = 0
-    visited_nodes = []
-    for index, node in enumerate(solution):
-        for neighbor in node:
-            if neighbor not in visited_nodes:
-                visited_nodes += [neighbor]
-                sum += [nbh[1] for nbh in grafo_barrios_montevideo[index] if nbh[0] == neighbor][0]
-    return sum
+    def sum_solution_connectivity(self, solution):
+        sum = 0
+        connected_nodes = []
+        dfs(connected_nodes, solution, 0)
+        for node in connected_nodes:
+            sum += [nbh[2] for nbh in self.barrios_montevideo if nbh[0] == node][0]
+        return sum
 
-def positive_correction(solution):
-    for index, node in enumerate(solution):
-        for neighbor in node:
-            if index not in [nbh for nbh in solution[neighbor]]:
-                solution[neighbor] += [index]
-            
+    def positive_correction(self, solution):
+        for index, node in enumerate(solution):
+            for neighbor in node:
+                if index not in [nbh for nbh in solution[neighbor]]:
+                    solution[neighbor] += [index]
 
-def recursive_generate_solution(solution, N, focused_nbh, visited_nbh):
-    if N == 0:
-        return
-    else:
-        for index in focused_nbh:
-            nbh_neighbors = [nbh[0] for nbh in grafo_barrios_montevideo[index] ]
 
-            # remove visited_nbh from random_neighbors
-            not_visited_neighbors = [nbh for nbh in nbh_neighbors if nbh not in visited_nbh]
+    def __recursive_generate_solution(self, solution, N, focused_nbh, visited_nbh):
+        if N == 0:
+            return
+        else:
+            for index in focused_nbh:
+                nbh_neighbors = [nbh[0] for nbh in self.grafo_barrios_montevideo[index] ]
 
-            # take N random neighbors from nbh_neighbors
-            if N < len(not_visited_neighbors):
-                random_neighbors = random.sample(not_visited_neighbors, N)
-            else:
-                random_neighbors = not_visited_neighbors
-                 
-            visited_nbh += random_neighbors
-            solution[index] += random_neighbors
+                # remove visited_nbh from random_neighbors
+                not_visited_neighbors = [nbh for nbh in nbh_neighbors if nbh not in visited_nbh]
 
-            recursive_generate_solution(solution, N-1, random_neighbors, visited_nbh)
+                # take N random neighbors from nbh_neighbors
+                if N < len(not_visited_neighbors):
+                    random_neighbors = random.sample(not_visited_neighbors, N)
+                else:
+                    random_neighbors = not_visited_neighbors
+
+                visited_nbh += random_neighbors
+                solution[index] += random_neighbors
+
+                self.__recursive_generate_solution(solution, N-1, random_neighbors, visited_nbh)
+
+    def centric_solutions_init_method(self, solution):
+        # Este metodo inicializa la solucion con grafos centricos.
+        N=2
+        self.__recursive_generate_solution(solution, N, [0], [])
+
+    def __recursive_generate_deep_solution(self, solution, N, focused_nbh, visited_nbh):
+        if N == 0:
+            return
+        else:
+            for index in focused_nbh:
+                nbh_neighbors = [nbh[0] for nbh in self.grafo_barrios_montevideo[index]]
+
+                # remove visited_nbh from random_neighbors
+                not_visited_neighbors = [nbh for nbh in nbh_neighbors if nbh not in visited_nbh]
+
+                picked_neighbor = random.sample(not_visited_neighbors, 1)
+
+                visited_nbh += picked_neighbor
+                solution[index] += picked_neighbor
+
+                self.__recursive_generate_solution(solution, N-1, picked_neighbor, visited_nbh)
+
+    def deep_solutions_init_method(self, solution):
+        # Este metodo inicializa la solucion con grafos extensos.
+        N = round(len(self.grafo_barrios_montevideo) / 2)
+        self.__recursive_generate_deep_solution(solution, N, [0], [])
+
+def test_centric_solutions(test, solution):
+    test.centric_solutions_init_method(solution)
+    print("CEntric Solucion no corregida", solution)
+    test.positive_correction(solution)
+    print("Centric Solucion corregida",solution)
+    print(test.sum_solution_connectivity(solution))
+    # print(test.sum_solution_costs(solution))
+
+def test_deep_solutions(test, solution):
+    test.deep_solutions_init_method(solution)
+    print("DEep Solucion no corregida", solution)
+    test.positive_correction(solution)
+    print("Deep Solucion corregida",solution)
+    print(test.sum_solution_costs(solution))
 
 if __name__ == "__main__":
     solution = [[] for _ in range(6)]
-    recursive_generate_solution(solution, 2, [0], [])
-    print("Solucion no corregida", solution)
-    positive_correction(solution)
-    print("Solucion corregida",solution)
-    
-
-    print(sum_solution_costs(solution), sum_solution_costs2(solution))
+    test = TEST()
+    test_centric_solutions(test, solution)
+    # solution = [[] for _ in range(6)]
+    # test_deep_solutions(test, solution)
 
