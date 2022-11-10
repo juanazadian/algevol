@@ -43,5 +43,3 @@ if __name__ == "__main__":
 
     print(f"Pareto Front: {front}")
 
-    plot_front = Plot(plot_title='Pareto front approximation', axis_labels=['x', 'y'])
-    plot_front.plot(front, label='SPEA2-ZDT1')

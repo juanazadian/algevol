@@ -112,8 +112,10 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
     def __sum_solution_costs(self, solution):
         sum = 0
         for index, node in enumerate(solution.variables):
-            for neighbor in node:
-                sum += [nbh[1] for nbh in self.grafo_barrios_montevideo[index] if nbh[0] == neighbor][0]
+            for connected_neighbor in node:
+                for neighbor in self.grafo_barrios_montevideo[index]:
+                    if neighbor[0] == connected_neighbor:
+                        sum += neighbor[1]
         return sum/2
 
     def __sum_solution_connectivity(self, solution):
