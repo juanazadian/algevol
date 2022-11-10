@@ -13,7 +13,7 @@ from jmetal.util.termination_criterion import StoppingByEvaluations
 from jmetal.lab.visualization.plotting import Plot
 from jmetal.util.solution import get_non_dominated_solutions
 
-from problem import DFOM
+from problem_dummy import DFOM
 from mutation import GraphMutation
 from crossover import GraphCrossover
 
@@ -21,7 +21,7 @@ if __name__ == "__main__":
     problem = DFOM()
     problem.reference_front = read_solutions(filename="resources/reference_front/DTLZ2.3D.pf")
 
-    max_evaluations = 20000
+    max_evaluations = 20
     algorithm = SPEA2(
         problem=problem,
         population_size=20,
@@ -36,9 +36,12 @@ if __name__ == "__main__":
 
     print(f"Algorithm: {algorithm.get_name()}")
     print(f"Problem: {problem.get_name()}")
+    print(f"Solutions: {solutions}")
     print(f"Computing time: {algorithm.total_computing_time}")
 
     front = get_non_dominated_solutions(solutions)
+
+    print(f"Pareto Front: {front}")
 
     plot_front = Plot(plot_title='Pareto front approximation', axis_labels=['x', 'y'])
     plot_front.plot(front, label='SPEA2-ZDT1')

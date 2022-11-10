@@ -26,10 +26,10 @@ class GraphCrossover(Crossover[GraphSolution, GraphSolution]):
         # Luego, debo corregir para que siga siendo una lista de adyacencia válida.
         rand = random.random()
         
-        if rand <= self.probability: # Corrijo quitando a la lista de adyacencia.
-            print("if")
-        else: # Corrijo agregando a la lista de adyacencia.
-            print("else")
+        # if rand <= self.probability: # Corrijo quitando a la lista de adyacencia.
+            # print("if")
+        # else: # Corrijo agregando a la lista de adyacencia.
+            # print("else")
         return offspring
 
     def get_number_of_parents(self) -> int:
