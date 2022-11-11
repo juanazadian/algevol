@@ -6,9 +6,9 @@ from jmetal.util.ckecking import Check
 
 class GraphMutation(Mutation[GraphSolution]):
 
-    def __init__(self, probability: float, grafo_barrios_montevideo: list, distribution_index: float = 0.20):
+    def __init__(self, probability: float, neighborhoods_graph: list, distribution_index: float = 0.20):
         super(GraphMutation, self).__init__(probability=probability)
-        self.grafo_barrios_montevideo = grafo_barrios_montevideo
+        self.neighborhoods_graph = neighborhoods_graph
         self.distribution_index = distribution_index # No se si se va a usar esto, pero lo dejo por las dudas. Creo q con probability ya esta.
 
     def execute(self, solution: GraphSolution) -> GraphSolution:
@@ -17,7 +17,7 @@ class GraphMutation(Mutation[GraphSolution]):
         # random number between 1 and number_of_variables
         picked_nbh = random.randint(1, solution.number_of_variables - 1) # No se está considerando la central. Podría considerarse tambien.
 
-        possible_neighbors = self.grafo_barrios_montevideo[picked_nbh]
+        possible_neighbors = self.neighborhoods_graph[picked_nbh]
 
         picked_neighbor = random.sample(possible_neighbors, 1)[0][0]
 

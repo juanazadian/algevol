@@ -25,7 +25,7 @@ if __name__ == "__main__":
         problem=problem,
         population_size=20,
         offspring_population_size=20,
-        mutation=GraphMutation(probability=1.0 / problem.number_of_variables, grafo_barrios_montevideo = problem.grafo_barrios_montevideo, distribution_index=20),
+        mutation=GraphMutation(probability=1.0 / problem.number_of_variables, neighborhoods_graph = problem.neighborhoods_graph, distribution_index=20),
         crossover=GraphCrossover(probability=0.5), # Se puede ajustar esa probabilidad.
         termination_criterion=StoppingByEvaluations(max_evaluations=max_evaluations),
     )

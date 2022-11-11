@@ -2,6 +2,7 @@ from jmetal.core.problem import Problem
 from solution import GraphSolution
 from abc import ABC
 from helpers import *
+from utils import *
 import random
 
 class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Montevideo
@@ -11,11 +12,10 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
         """
         self.number_of_variables = number_of_variables
         self.number_of_objectives = number_of_objectives
-        # self.number_of_constraints = 0
         # self.obj_directions = [self.MINIMIZE] * number_of_objectives # Esto nose si está bien.
         # self.obj_labels = ['$ f_{} $'.format(i) for i in range(number_of_objectives)]
-        self.barrios_montevideo = [i for i in range(1, 63)] # Para tener un mapeo entre el indice y el nombre del barrio.
-        self.grafo_barrios_montevideo = [] # Lista de adyacencia. Hay que definir bien los barrios y sus adyacentes. Va a ser una lista de listas de (barrio, costo).
+        self.neighborhoods_population = NEIGHBORHOODS_POPULATION
+        self.neighborhoods_graph = NEIGHBORHOODS_GRAPH
 
     # --------  Centric solutions initialization methods ----------
 
@@ -24,7 +24,7 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
             return
         else:
             for index in focused_nbh:
-                nbh_neighbors = [nbh[0] for nbh in self.grafo_barrios_montevideo[index] ]
+                nbh_neighbors = [nbh[0] for nbh in self.neighborhoods_graph[index] ]
 
                 # remove visited_nbh from random_neighbors
                 not_visited_neighbors = [nbh for nbh in nbh_neighbors if nbh not in visited_nbh]
@@ -52,7 +52,7 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
             return
         else:
             for index in focused_nbh:
-                nbh_neighbors = [nbh[0] for nbh in self.grafo_barrios_montevideo[index]]
+                nbh_neighbors = [nbh[0] for nbh in self.neighborhoods_graph[index]]
 
                 # remove visited_nbh from random_neighbors
                 not_visited_neighbors = [nbh for nbh in nbh_neighbors if nbh not in visited_nbh]
@@ -66,7 +66,7 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
 
     def __deep_solutions_init_method(self, solution: GraphSolution):
         # Este metodo inicializa la solucion con grafos extensos.
-        N = round(len(self.grafo_barrios_montevideo) / 2)
+        N = round(len(self.neighborhoods_graph) / 2)
         self.__recursive_generate_deep_solution(solution, N, [0], [])
 
     # ---------------------------------------------------------------
@@ -74,8 +74,7 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
     def create_solution(self) -> GraphSolution:
         new_solution = GraphSolution(
             self.number_of_variables,
-            self.number_of_objectives,
-            self.number_of_constraints)
+            self.number_of_objectives)
 
         rand = random.random()
 
@@ -94,7 +93,7 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
         sum = 0
         for index, node in enumerate(solution.variables):
             for connected_neighbor in node:
-                for neighbor in self.grafo_barrios_montevideo[index]:
+                for neighbor in self.neighborhoods_graph[index]:
                     if neighbor[0] == connected_neighbor:
                         sum += neighbor[1]
         return sum/2
@@ -104,7 +103,7 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
         connected_nodes = []
         dfs(connected_nodes, solution.variables, 0)
         for node in connected_nodes:
-            sum += [nbh[2] for nbh in self.barrios_montevideo if nbh[0] == node][0]
+            sum += [nbh[2] for nbh in self.neighborhoods_population if nbh[0] == node][0]
         return sum
 
     def evaluate(self, solution: GraphSolution) -> GraphSolution:

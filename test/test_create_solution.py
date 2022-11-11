@@ -9,9 +9,9 @@ def dfs(visited, graph, node):
 class TEST:
 
     def __init__(self):
-        self.barrios_montevideo = [ (0, "Central", 0), (1,"Pocitos", 110000), (2, "La Blanqueada", 80000),
+        self.neighborhoods_population = [ (0, "Central", 0), (1,"Pocitos", 110000), (2, "La Blanqueada", 80000),
         (3, "Tres Cruces", 20000), (4, "Punta Carretas", 40000), (5 , "Centro", 130000)]
-        self.grafo_barrios_montevideo = [ [(1, 6), (2, 1), (3, 5)], [(0, 6), (2, 5), (4, 3)],
+        self.neighborhoods_graph = [ [(1, 6), (2, 1), (3, 5)], [(0, 6), (2, 5), (4, 3)],
         [(0, 1), (1, 5), (4, 6), (5, 4), (3, 5)], [(0, 5), (2, 5), (5, 2)],
         [(1, 3), (2, 6), (4, 6)], [(4, 6), (2, 4), (3, 2)] ]
 
@@ -20,7 +20,7 @@ class TEST:
         sum = 0
         for index, node in enumerate(solution):
             for neighbor in node:
-                sum += [nbh[1] for nbh in self.grafo_barrios_montevideo[index] if nbh[0] == neighbor][0]
+                sum += [nbh[1] for nbh in self.neighborhoods_graph[index] if nbh[0] == neighbor][0]
         return sum/2
 
     def sum_solution_connectivity(self, solution):
@@ -28,7 +28,7 @@ class TEST:
         connected_nodes = []
         dfs(connected_nodes, solution, 0)
         for node in connected_nodes:
-            sum += [nbh[2] for nbh in self.barrios_montevideo if nbh[0] == node][0]
+            sum += [nbh[2] for nbh in self.neighborhoods_population if nbh[0] == node][0]
         return sum
 
     def positive_correction(self, solution):
@@ -43,7 +43,7 @@ class TEST:
             return
         else:
             for index in focused_nbh:
-                nbh_neighbors = [nbh[0] for nbh in self.grafo_barrios_montevideo[index] ]
+                nbh_neighbors = [nbh[0] for nbh in self.neighborhoods_graph[index] ]
 
                 # remove visited_nbh from random_neighbors
                 not_visited_neighbors = [nbh for nbh in nbh_neighbors if nbh not in visited_nbh]
@@ -69,7 +69,7 @@ class TEST:
             return
         else:
             for index in focused_nbh:
-                nbh_neighbors = [nbh[0] for nbh in self.grafo_barrios_montevideo[index]]
+                nbh_neighbors = [nbh[0] for nbh in self.neighborhoods_graph[index]]
 
                 # remove visited_nbh from random_neighbors
                 not_visited_neighbors = [nbh for nbh in nbh_neighbors if nbh not in visited_nbh]
@@ -83,7 +83,7 @@ class TEST:
 
     def deep_solutions_init_method(self, solution):
         # Este metodo inicializa la solucion con grafos extensos.
-        N = round(len(self.grafo_barrios_montevideo) / 2)
+        N = round(len(self.neighborhoods_graph) / 2)
         self.__recursive_generate_deep_solution(solution, N, [0], [])
 
 def test_centric_solutions(test, solution):
