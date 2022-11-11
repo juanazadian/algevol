@@ -19,14 +19,13 @@ from crossover import GraphCrossover
 
 if __name__ == "__main__":
     problem = DFOM()
-    problem.reference_front = read_solutions(filename="resources/reference_front/DTLZ2.3D.pf")
 
-    max_evaluations = 20
+    max_evaluations = 10000
     algorithm = SPEA2(
         problem=problem,
         population_size=20,
         offspring_population_size=20,
-        mutation=GraphMutation(probability=1.0 / problem.number_of_variables, distribution_index=20),
+        mutation=GraphMutation(probability=1.0 / problem.number_of_variables, grafo_barrios_montevideo = problem.grafo_barrios_montevideo, distribution_index=20),
         crossover=GraphCrossover(probability=0.5), # Se puede ajustar esa probabilidad.
         termination_criterion=StoppingByEvaluations(max_evaluations=max_evaluations),
     )

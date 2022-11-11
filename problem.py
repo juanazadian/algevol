@@ -1,13 +1,8 @@
 from jmetal.core.problem import Problem
 from solution import GraphSolution
 from abc import ABC
+from helpers import *
 import random
-
-def dfs(visited, graph, node):
-    if node not in visited:
-        visited += [node]
-        for neighbour in graph[node]:
-            dfs(visited, graph, neighbour)
 
 class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Montevideo
 
@@ -21,20 +16,6 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
         # self.obj_labels = ['$ f_{} $'.format(i) for i in range(number_of_objectives)]
         self.barrios_montevideo = [i for i in range(1, 63)] # Para tener un mapeo entre el indice y el nombre del barrio.
         self.grafo_barrios_montevideo = [] # Lista de adyacencia. Hay que definir bien los barrios y sus adyacentes. Va a ser una lista de listas de (barrio, costo).
-
-    # --------  Solution corrections methods ----------
-
-    def __positive_correction(self, solution):
-        for index, node in enumerate(solution.variables):
-            for neighbor in node:
-                if index not in [nbh for nbh in solution.variables[neighbor]]:
-                    solution.variables[neighbor] += [index]
-
-    def __negative_correction(self, solution):
-        for index, node in enumerate(solution.variables):
-            for neighbor in node:
-                if index not in [nbh for nbh in solution.variables[neighbor]]:
-                    solution.variables[index].remove(neighbor)
 
     # --------  Centric solutions initialization methods ----------
 
@@ -103,7 +84,7 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
         else: # Corrijo agregando a la lista de adyacencia.
             self.__deep_solutions_init_method(new_solution)
 
-        self.__positive_correction(new_solution)
+        positive_correction(new_solution)
 
         return new_solution
 

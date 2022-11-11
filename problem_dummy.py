@@ -1,6 +1,7 @@
 from jmetal.core.problem import Problem
 from solution import GraphSolution
 from abc import ABC
+from helpers import *
 import random
 
 def dfs(visited, graph, node):
@@ -24,20 +25,6 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
         self.grafo_barrios_montevideo = [ [(1, 6), (2, 1), (3, 5)], [(0, 6), (2, 5), (4, 3)],
         [(0, 1), (1, 5), (4, 6), (5, 4), (3, 5)], [(0, 5), (2, 5), (5, 2)],
         [(1, 3), (2, 6), (4, 6)], [(4, 6), (2, 4), (3, 2)] ] # Lista de adyacencia. Hay que definir bien los barrios y sus adyacentes. Va a ser una lista de listas de (barrio, costo).
-
-    # --------  Solution corrections methods ----------
-
-    def __positive_correction(self, solution):
-        for index, node in enumerate(solution.variables):
-            for neighbor in node:
-                if index not in [nbh for nbh in solution.variables[neighbor]]:
-                    solution.variables[neighbor] += [index]
-
-    def __negative_correction(self, solution):
-        for index, node in enumerate(solution.variables):
-            for neighbor in node:
-                if index not in [nbh for nbh in solution.variables[neighbor]]:
-                    solution.variables[index].remove(neighbor)
 
     # --------  Centric solutions initialization methods ----------
 
@@ -106,7 +93,7 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
         else: # Corrijo agregando a la lista de adyacencia.
             self.__deep_solutions_init_method(new_solution)
 
-        self.__positive_correction(new_solution)
+        positive_correction(new_solution)
 
         return new_solution
 

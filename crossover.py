@@ -2,6 +2,7 @@ from jmetal.core.operator import Crossover
 from solution import GraphSolution
 from typing import List
 from jmetal.util.ckecking import Check
+from helpers import *
 import random
 import copy
 
@@ -21,15 +22,21 @@ class GraphCrossover(Crossover[GraphSolution, GraphSolution]):
         # Arranco con los hijos iguales a los nuevos padres en este caso. (pa inicializar en realidad, capaz no va esto)
         offspring = [copy.deepcopy(parents[0]), copy.deepcopy(parents[1])]
 
-        # Luego, Realizo el cruzamiento que pensamos.
+        N = len(offspring[0].variables)
+        nbh_to_cross = random.sample(list(range(N)), round(N/3))
 
-        # Luego, debo corregir para que siga siendo una lista de adyacencia válida.
-        rand = random.random()
-        
-        # if rand <= self.probability: # Corrijo quitando a la lista de adyacencia.
-            # print("if")
-        # else: # Corrijo agregando a la lista de adyacencia.
-            # print("else")
+        for nbh in nbh_to_cross:
+            to_cross = offspring[0].variables[nbh]
+            offspring[0].variables[nbh] = offspring[1].variables[nbh]
+            offspring[1].variables[nbh] = to_cross
+
+        if random.random() <= 0.5:
+            positive_correction(offspring[0])
+            positive_correction(offspring[1])
+        else:
+            negative_correction(offspring[0])
+            negative_correction(offspring[1])
+
         return offspring
 
     def get_number_of_parents(self) -> int:
