@@ -5,6 +5,7 @@ from helpers import *
 from utils import *
 import random
 
+CENTRAL_INDEX = 0
 class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Montevideo
 
     def __init__(self, number_of_variables: int = 62, number_of_objectives = 2):
@@ -16,7 +17,7 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
         # self.obj_labels = ['$ f_{} $'.format(i) for i in range(number_of_objectives)]
         self.neighborhoods_information = NEIGHBORHOODS_INFORMATION
         self.neighborhoods_graph = NEIGHBORHOODS_GRAPH
-
+        self.central_index = CENTRAL_INDEX
     # --------  Centric solutions initialization methods ----------
 
     def __recursive_generate_centric_solution(self, solution, N, focused_nbh, visited_nbh):
