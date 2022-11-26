@@ -14,7 +14,7 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
         self.number_of_objectives = number_of_objectives
         # self.obj_directions = [self.MINIMIZE] * number_of_objectives # Esto nose si está bien.
         # self.obj_labels = ['$ f_{} $'.format(i) for i in range(number_of_objectives)]
-        self.neighborhoods_population = NEIGHBORHOODS_POPULATION
+        self.neighborhoods_information = NEIGHBORHOODS_INFORMATION
         self.neighborhoods_graph = NEIGHBORHOODS_GRAPH
 
     # --------  Centric solutions initialization methods ----------
@@ -103,7 +103,7 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
         connected_nodes = []
         dfs(connected_nodes, solution.variables, 0)
         for node in connected_nodes:
-            sum += [nbh[2] for nbh in self.neighborhoods_population if nbh[0] == node][0]
+            sum += [nbh[2] for nbh in self.neighborhoods_information if nbh[0] == node][0]
         return sum
 
     def evaluate(self, solution: GraphSolution) -> GraphSolution:
