@@ -1,8 +1,6 @@
 #!/bin/env python
 
 from jmetal.algorithm.multiobjective.spea2 import SPEA2
-from jmetal.operator import PolynomialMutation, SBXCrossover
-from jmetal.problem import DTLZ2
 from jmetal.util.solution import (
     print_function_values_to_file,
     print_variables_to_file,
