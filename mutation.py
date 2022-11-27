@@ -15,18 +15,22 @@ class GraphMutation(Mutation[GraphSolution]):
         Check.that(issubclass(type(solution), GraphSolution), "Solution type invalid")
 
         # random number between 1 and number_of_variables
-        picked_nbh = random.randint(1, solution.number_of_variables - 1) # No se está considerando la central. Podría considerarse tambien.
-
-        possible_neighbors = self.neighborhoods_graph[picked_nbh]
+        random_index = random.randint(0, solution.number_of_variables - 1) # No se está considerando la central. Podría considerarse tambien.
+        # TODO: podriamos ver de excluir la central de la mutacion
+        possible_neighbors = self.neighborhoods_graph[random_index]
 
         picked_neighbor = random.sample(possible_neighbors, 1)[0][0]
 
-        if picked_neighbor in solution.variables[picked_nbh]:
-            solution.variables[picked_nbh].remove(picked_neighbor)
-            solution.variables[picked_neighbor].remove(picked_nbh)
+        if picked_neighbor in solution.variables[random_index]:
+            if random_index not in solution.variables[picked_neighbor]:
+                print(solution.variables)
+                print(solution.variables[random_index])
+                print(solution.variables[picked_neighbor])
+            solution.variables[random_index].remove(picked_neighbor)
+            solution.variables[picked_neighbor].remove(random_index)
         else:
-            solution.variables[picked_nbh] += [picked_neighbor]
-            solution.variables[picked_neighbor] += [picked_nbh]
+            solution.variables[random_index] += [picked_neighbor]
+            solution.variables[picked_neighbor] += [random_index]
 
         return solution
 

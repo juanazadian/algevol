@@ -11,7 +11,7 @@ from jmetal.util.termination_criterion import StoppingByEvaluations
 from jmetal.lab.visualization.plotting import Plot
 from jmetal.util.solution import get_non_dominated_solutions
 
-from problem_dummy import DFOM
+from problem import DFOM
 from mutation import GraphMutation
 from crossover import GraphCrossover
 

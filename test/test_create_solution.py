@@ -1,4 +1,5 @@
 import random
+import copy
 
 def dfs(visited, graph, node):
     if node not in visited:
@@ -36,6 +37,15 @@ class TEST:
             for neighbor in node:
                 if index not in [nbh for nbh in solution[neighbor]]:
                     solution[neighbor] += [index]
+
+
+    def negative_correction(self, solution):
+        copi = copy.deepcopy(solution)
+        for index, node in enumerate(solution):
+            for neighbor in node:
+                if index not in [nbh for nbh in copi[neighbor]]:
+                    print("corrige")
+                    solution[index].remove(neighbor)
 
 
     def __recursive_generate_solution(self, solution, N, focused_nbh, visited_nbh):
@@ -89,7 +99,7 @@ class TEST:
 def test_centric_solutions(test, solution):
     test.centric_solutions_init_method(solution)
     print("CEntric Solucion no corregida", solution)
-    test.positive_correction(solution)
+    test.negative_correction(solution)
     print("Centric Solucion corregida",solution)
     print(test.sum_solution_connectivity(solution))
     # print(test.sum_solution_costs(solution))
@@ -97,14 +107,14 @@ def test_centric_solutions(test, solution):
 def test_deep_solutions(test, solution):
     test.deep_solutions_init_method(solution)
     print("DEep Solucion no corregida", solution)
-    test.positive_correction(solution)
+    test.negative_correction(solution)
     print("Deep Solucion corregida",solution)
     print(test.sum_solution_costs(solution))
 
 if __name__ == "__main__":
     solution = [[] for _ in range(6)]
     test = TEST()
-    test_centric_solutions(test, solution)
+    test_deep_solutions(test, solution)
     # solution = [[] for _ in range(6)]
     # test_deep_solutions(test, solution)
 
