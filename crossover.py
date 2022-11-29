@@ -30,12 +30,12 @@ class GraphCrossover(Crossover[GraphSolution, GraphSolution]):
             offspring[0].variables[nbh] = offspring[1].variables[nbh]
             offspring[1].variables[nbh] = to_cross
 
-        if random.random() <= 0.5:
-            positive_correction(offspring[0])
-            positive_correction(offspring[1])
-        else:
-            negative_correction(offspring[0])
-            negative_correction(offspring[1])
+        # if random.random() <= 0.5:
+        positive_correction(offspring[0])
+        positive_correction(offspring[1])
+        # else:
+        #     negative_correction(offspring[0])
+        #     negative_correction(offspring[1])
 
         return offspring
 

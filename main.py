@@ -14,6 +14,7 @@ from jmetal.util.solution import get_non_dominated_solutions
 from problem import DFOM
 from mutation import GraphMutation
 from crossover import GraphCrossover
+from jmetal.lab.visualization import Plot
 
 if __name__ == "__main__":
     problem = DFOM()
@@ -37,6 +38,9 @@ if __name__ == "__main__":
     print(f"Computing time: {algorithm.total_computing_time}")
 
     front = get_non_dominated_solutions(solutions)
+
+    plot_front = Plot(title='Pareto front approximation', axis_labels=['x', 'y'])
+    plot_front.plot(front, label='NSGAII-ZDT1')
 
     print(f"Pareto Front: {front}")
 
