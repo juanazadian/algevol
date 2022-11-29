@@ -13,6 +13,16 @@ from crossover import GraphCrossover
 from jmetal.lab.visualization import Plot
 from pandas import DataFrame
 import matplotlib.pyplot as plt
+import networkx as nx
+
+def make_graph(solution):
+    G = nx.Graph()
+    for index, node in enumerate(solution.variables):
+        for nbh in node:
+            G.add_edge(index, nbh)
+    nx.draw(G, with_labels=True, font_weight='bold')
+    plt.show()
+
 
 if __name__ == "__main__":
     problem = DFOM()
@@ -39,5 +49,12 @@ if __name__ == "__main__":
 
     df = Plot.get_points(front)[0].rename(columns={0: "x", 1: "y"})
     df.plot(x = 'x', y = 'y', kind = "scatter", grid = True, legend = True, xlabel = 'cost', ylabel = 'connectivity')
+
     plt.show()
+    make_graph(front[0])
+    make_graph(front[9])
+    make_graph(front[19])
+
+
+
 
