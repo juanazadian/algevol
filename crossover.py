@@ -32,7 +32,7 @@ class GraphCrossover(Crossover[GraphSolution, GraphSolution]):
 
         if random.random() <= 0.5:
             offspring_0 = positive_correction(offspring[0])
-            offspring_1 =positive_correction(offspring[1])
+            offspring_1 = positive_correction(offspring[1])
         else:
             offspring_0 = negative_correction(offspring[0])
             offspring_1 = negative_correction(offspring[1])

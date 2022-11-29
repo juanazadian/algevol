@@ -1,11 +1,7 @@
 #!/bin/env python
 
 from jmetal.algorithm.multiobjective.spea2 import SPEA2
-from jmetal.util.solution import (
-    print_function_values_to_file,
-    print_variables_to_file,
-    read_solutions,
-)
+
 from jmetal.util.termination_criterion import StoppingByEvaluations
 
 from jmetal.lab.visualization.plotting import Plot
@@ -21,7 +17,7 @@ import matplotlib.pyplot as plt
 if __name__ == "__main__":
     problem = DFOM()
 
-    max_evaluations = 1000
+    max_evaluations = 10000
     algorithm = SPEA2(
         problem=problem,
         population_size=20,

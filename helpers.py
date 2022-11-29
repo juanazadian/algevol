@@ -7,17 +7,17 @@ def dfs(visited, graph, node):
             dfs(visited, graph, neighbour)
 
 def positive_correction(solution):
-    copi = copy.deepcopy(solution)
+    res = copy.deepcopy(solution)
     for index, node in enumerate(solution.variables):
         for neighbor in node:
             if index not in [nbh for nbh in solution.variables[neighbor]]:
-                copi.variables[neighbor] += [index]
-    return copi
+                res.variables[neighbor] += [index]
+    return res
 
 def negative_correction(solution):
-    copi = copy.deepcopy(solution)
+    res = copy.deepcopy(solution)
     for index, node in enumerate(solution.variables):
         for neighbor in node:
             if index not in [nbh for nbh in solution.variables[neighbor]]:
-                copi.variables[index].remove(neighbor)
-    return copi
+                res.variables[index].remove(neighbor)
+    return res
