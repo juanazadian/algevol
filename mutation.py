@@ -22,10 +22,6 @@ class GraphMutation(Mutation[GraphSolution]):
         picked_neighbor = random.sample(possible_neighbors, 1)[0][0]
 
         if picked_neighbor in solution.variables[random_index]:
-            if random_index not in solution.variables[picked_neighbor]:
-                print(solution.variables)
-                print(solution.variables[random_index])
-                print(solution.variables[picked_neighbor])
             solution.variables[random_index].remove(picked_neighbor)
             solution.variables[picked_neighbor].remove(random_index)
         else:

@@ -15,11 +15,13 @@ from problem import DFOM
 from mutation import GraphMutation
 from crossover import GraphCrossover
 from jmetal.lab.visualization import Plot
+from pandas import DataFrame
+import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
     problem = DFOM()
 
-    max_evaluations = 10000
+    max_evaluations = 5000
     algorithm = SPEA2(
         problem=problem,
         population_size=20,
@@ -39,8 +41,7 @@ if __name__ == "__main__":
 
     front = get_non_dominated_solutions(solutions)
 
-    plot_front = Plot(title='Pareto front approximation', axis_labels=['x', 'y'])
-    plot_front.plot(front, label='NSGAII-ZDT1')
-
-    print(f"Pareto Front: {front}")
+    df = Plot.get_points(front)[0].rename(columns={0: "x", 1: "y"})
+    df.plot(x = 'x', y = 'y', kind = "scatter", grid = True, legend = True, xlabel = 'cost', ylabel = 'connectivity')
+    plt.show()
 
