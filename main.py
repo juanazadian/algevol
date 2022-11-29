@@ -14,6 +14,9 @@ from jmetal.util.solution import get_non_dominated_solutions
 from problem import DFOM
 from mutation import GraphMutation
 from crossover import GraphCrossover
+from jmetal.lab.visualization import Plot
+from pandas import DataFrame
+import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
     problem = DFOM()
@@ -38,5 +41,7 @@ if __name__ == "__main__":
 
     front = get_non_dominated_solutions(solutions)
 
-    print(f"Pareto Front: {front}")
+    df = Plot.get_points(front)[0].rename(columns={0: "x", 1: "y"})
+    df.plot(x = 'x', y = 'y', kind = "scatter", grid = True, legend = True, xlabel = 'cost', ylabel = 'connectivity')
+    plt.show()
 
