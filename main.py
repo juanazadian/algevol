@@ -18,7 +18,7 @@ from crossover import GraphCrossover
 if __name__ == "__main__":
     problem = DFOM()
 
-    max_evaluations = 10000
+    max_evaluations = 1000
     algorithm = SPEA2(
         problem=problem,
         population_size=20,

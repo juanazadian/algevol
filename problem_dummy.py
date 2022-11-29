@@ -91,9 +91,9 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
         else: # Corrijo agregando a la lista de adyacencia.
             self.__deep_solutions_init_method(new_solution)
 
-        positive_correction(new_solution)
+        new_sol = positive_correction(new_solution)
 
-        return new_solution
+        return new_sol
 
     # --------  Evaluation methods ----------
 

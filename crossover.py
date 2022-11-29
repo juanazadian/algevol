@@ -31,13 +31,13 @@ class GraphCrossover(Crossover[GraphSolution, GraphSolution]):
             offspring[1].variables[nbh] = to_cross
 
         if random.random() <= 0.5:
-            positive_correction(offspring[0])
-            positive_correction(offspring[1])
+            offspring_0 = positive_correction(offspring[0])
+            offspring_1 =positive_correction(offspring[1])
         else:
-            negative_correction(offspring[0])
-            negative_correction(offspring[1])
+            offspring_0 = negative_correction(offspring[0])
+            offspring_1 = negative_correction(offspring[1])
 
-        return offspring
+        return [offspring_0, offspring_1]
 
     def get_number_of_parents(self) -> int:
         return 2

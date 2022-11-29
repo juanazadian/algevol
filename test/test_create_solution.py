@@ -43,9 +43,10 @@ class TEST:
         copi = copy.deepcopy(solution)
         for index, node in enumerate(solution):
             for neighbor in node:
-                if index not in [nbh for nbh in copi[neighbor]]:
+                if index not in [nbh for nbh in solution[neighbor]]:
                     print("corrige")
-                    solution[index].remove(neighbor)
+                    copi[index].remove(neighbor)
+        return copi
 
 
     def __recursive_generate_solution(self, solution, N, focused_nbh, visited_nbh):
@@ -107,8 +108,8 @@ def test_centric_solutions(test, solution):
 def test_deep_solutions(test, solution):
     test.deep_solutions_init_method(solution)
     print("DEep Solucion no corregida", solution)
-    test.negative_correction(solution)
-    print("Deep Solucion corregida",solution)
+    res = test.negative_correction(solution)
+    print("Deep Solucion corregida",res)
     print(test.sum_solution_costs(solution))
 
 if __name__ == "__main__":
