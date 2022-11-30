@@ -14,6 +14,7 @@ from jmetal.lab.visualization import Plot
 from pandas import DataFrame
 import matplotlib.pyplot as plt
 import networkx as nx
+from utils import NEIGHBORHOODS_GRAPH, NEIGHBORHOODS_INFORMATION
 
 def make_graph(solution):
     G = nx.Graph()
@@ -23,11 +24,18 @@ def make_graph(solution):
     nx.draw(G, with_labels=True, font_weight='bold')
     plt.show()
 
+CENTRAL_INDEX = 0
 
 if __name__ == "__main__":
-    problem = DFOM()
 
-    max_evaluations = 10000
+    problem = DFOM(
+        neighborhoods_information=NEIGHBORHOODS_INFORMATION,
+        neighborhoods_graph=NEIGHBORHOODS_GRAPH,
+        number_of_variables=len(NEIGHBORHOODS_GRAPH),
+        central_index=CENTRAL_INDEX,
+    )
+
+    max_evaluations = 1000
     algorithm = SPEA2(
         problem=problem,
         population_size=20,
