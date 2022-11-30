@@ -1,3 +1,4 @@
+# lista de listas de adyacencia (vecino, distancia)
 NEIGHBORHOODS_GRAPH = [
     [(1, 1422), (2, 1804)],
     [(0, 1422), (2, 876), (40, 1601), (3, 1724)],
@@ -63,9 +64,7 @@ NEIGHBORHOODS_GRAPH = [
     [(30, 2222), (29, 3460), (31, 276), (60, 9436)]
 ]
 
-
-
-
+# lista de tuplas de barrio (indice, nombre, poblacion, coordenadas)
 NEIGHBORHOODS_INFORMATION = [
     (0, "Ciudad Vieja", 12555, '-34.90766570710068, -56.20811461151588'),
     (1, "Centro", 22120, '-34.90434740825268, -56.19361484600484'),

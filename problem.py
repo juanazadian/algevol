@@ -117,7 +117,7 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
         solution.objectives[0] = self.__sum_solution_costs(solution)
 
         # Evaluo respecto a la función de conectividad
-        solution.objectives[1] = -1 * self.__sum_solution_connectivity(solution)
+        solution.objectives[1] = -self.__sum_solution_connectivity(solution)
 
         return solution
 
