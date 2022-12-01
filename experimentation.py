@@ -47,7 +47,7 @@ def run_problem(mutation_probability, crossover_probability, population_size, gr
 
 
 if __name__ == "__main__":
-    
+
     mutation_probabilities = [0.001, 0.01, 0.1]
     crossover_probabilities = [0.5, 0.75, 1]
     population_sizes = [50, 125, 200]
@@ -56,4 +56,3 @@ if __name__ == "__main__":
             for population_size in population_sizes:
                 for n in range(30):
                     run_problem(mutation_probability, crossover_probability, population_size)
-                    metric = 

@@ -6,10 +6,10 @@ from utils import *
 import random
 class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Montevideo
 
-    def __init__(self, neighborhoods_information, neighborhoods_graph, central_index, number_of_variables: int = 62, number_of_objectives = 2):
+    def __init__(self, neighborhoods_information, neighborhoods_graph, central_index, number_of_objectives = 2):
         """ :param number_of_variables: number of decision variables of the problem.
         """
-        self.number_of_variables = number_of_variables
+        self.number_of_variables = len(neighborhoods_graph)
         self.number_of_objectives = number_of_objectives
         # self.obj_directions = [self.MINIMIZE] * number_of_objectives # Esto nose si está bien.
         # self.obj_labels = ['$ f_{} $'.format(i) for i in range(number_of_objectives)]
