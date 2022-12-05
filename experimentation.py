@@ -20,13 +20,17 @@ from jmetal.util.solution import (
     print_variables_to_file,
 )
 
+import multiprocessing as mp
+
+results = []
+
 def run_problem(mutation_probability, crossover_probability, population_size, graph = REDUCED_NEIGHBORHOODS_GRAPH, central_index = 0):
     problem = DFOM(
         neighborhoods_information=NEIGHBORHOODS_INFORMATION,
         neighborhoods_graph=graph,
         central_index=central_index,
     )
-    max_evaluations = 20000
+    max_evaluations = 15000
     algorithm = SPEA2(
         problem=problem,
         population_size=population_size,
@@ -39,20 +43,35 @@ def run_problem(mutation_probability, crossover_probability, population_size, gr
     print(f"Algorithm: {algorithm.get_name()}")
     print(f"Problem: {problem.get_name()}")
     print(f"Computing time: {algorithm.total_computing_time}")
-    return algorithm.get_result()
+    solutions = algorithm.get_result()
+    print_function_values_to_file(solutions, f'FUN.MUT_{mutation_probability}-CROSS_{crossover_probability}')
+    print_variables_to_file(solutions, f'VAR.MUT_{mutation_probability}-CROSS_{crossover_probability}')
 
+    return solutions
+
+def collect_result(result):
+    global results
+    results.append(result)
 
 if __name__ == "__main__":
 
     mutation_probabilities = [0.001, 0.01, 0.1]
     crossover_probabilities = [0.5, 0.75, 1]
-    population_sizes = [50, 125, 200]
+    # population_sizes = [50, 125, 200]
+    pool = mp.Pool(mp.cpu_count())
+
     solutions = []
     for mutation_probability in mutation_probabilities:
         for crossover_probability in crossover_probabilities:
-            for population_size in population_sizes:
-                for n in range(30):
-                    solutions += run_problem(mutation_probability, crossover_probability, population_size)
+            for n in range(2):
+                # solutions += run_problem(mutation_probability, crossover_probability, 50)
+                pool.apply_async(run_problem, args=(mutation_probability, crossover_probability, 50), callback = collect_result)
+
+    pool.close()
+    pool.join()
+
+    print("RESULTS: ", len(results))
+
     reference_pareto_front = get_non_dominated_solutions(solutions)
-    print_function_values_to_file(reference_pareto_front, "FUN." + 'DFOM_SPEA2')
-    print_variables_to_file(reference_pareto_front, "VAR." + 'DFOM_SPEA2')
+    print_function_values_to_file(reference_pareto_front, "FUN." + 'MERGE_DFOM_SPEA2')
+    print_variables_to_file(reference_pareto_front, "VAR." + 'MERGE_DFOM_SPEA2')
