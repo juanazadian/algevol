@@ -24,7 +24,7 @@ import multiprocessing as mp
 
 results = []
 
-def run_problem(mutation_probability, crossover_probability, population_size, graph = REDUCED_NEIGHBORHOODS_GRAPH, central_index = 0):
+def run_problem(mutation_probability, crossover_probability, population_size, run, graph = REDUCED_NEIGHBORHOODS_GRAPH, central_index = 0):
     problem = DFOM(
         neighborhoods_information=NEIGHBORHOODS_INFORMATION,
         neighborhoods_graph=graph,
@@ -44,8 +44,8 @@ def run_problem(mutation_probability, crossover_probability, population_size, gr
     print(f"Problem: {problem.get_name()}")
     print(f"Computing time: {algorithm.total_computing_time}")
     solutions = algorithm.get_result()
-    print_function_values_to_file(solutions, f'FUN.MUT_{mutation_probability}-CROSS_{crossover_probability}')
-    print_variables_to_file(solutions, f'VAR.MUT_{mutation_probability}-CROSS_{crossover_probability}')
+    print_function_values_to_file(solutions, f'FUN.MUT_{mutation_probability}-CROSS_{crossover_probability}-RUN_{run}')
+    print_variables_to_file(solutions, f'VAR.MUT_{mutation_probability}-CROSS_{crossover_probability}-RUN_{run}')
 
     return solutions
 
@@ -65,7 +65,7 @@ if __name__ == "__main__":
         for crossover_probability in crossover_probabilities:
             for n in range(2):
                 # solutions += run_problem(mutation_probability, crossover_probability, 50)
-                pool.apply_async(run_problem, args=(mutation_probability, crossover_probability, 50), callback = collect_result)
+                pool.apply_async(run_problem, args=(mutation_probability, crossover_probability, 50, n), callback = collect_result)
 
     pool.close()
     pool.join()
