@@ -15,13 +15,15 @@ from pandas import DataFrame
 import matplotlib.pyplot as plt
 import networkx as nx
 from utils import NEIGHBORHOODS_INFORMATION, REDUCED_NEIGHBORHOODS_GRAPH
-
+from jmetal.util.solution import (
+    print_function_values_to_file,
+    print_variables_to_file,
+)
 
 def run_problem(mutation_probability, crossover_probability, population_size, graph = REDUCED_NEIGHBORHOODS_GRAPH, central_index = 0):
     problem = DFOM(
         neighborhoods_information=NEIGHBORHOODS_INFORMATION,
         neighborhoods_graph=graph,
-        number_of_variables=len(graph),
         central_index=central_index,
     )
     max_evaluations = 20000
@@ -34,16 +36,10 @@ def run_problem(mutation_probability, crossover_probability, population_size, gr
         termination_criterion=StoppingByEvaluations(max_evaluations=max_evaluations),
     )
     algorithm.run()
-    solutions = algorithm.get_result()
-
     print(f"Algorithm: {algorithm.get_name()}")
     print(f"Problem: {problem.get_name()}")
-    print(f"Solutions: {solutions}")
     print(f"Computing time: {algorithm.total_computing_time}")
-    return get_non_dominated_solutions(solutions)
-
-
-
+    return algorithm.get_result()
 
 
 if __name__ == "__main__":
@@ -51,8 +47,12 @@ if __name__ == "__main__":
     mutation_probabilities = [0.001, 0.01, 0.1]
     crossover_probabilities = [0.5, 0.75, 1]
     population_sizes = [50, 125, 200]
+    solutions = []
     for mutation_probability in mutation_probabilities:
         for crossover_probability in crossover_probabilities:
             for population_size in population_sizes:
                 for n in range(30):
-                    run_problem(mutation_probability, crossover_probability, population_size)
+                    solutions += run_problem(mutation_probability, crossover_probability, population_size)
+    reference_pareto_front = get_non_dominated_solutions(solutions)
+    print_function_values_to_file(reference_pareto_front, "FUN." + 'DFOM_SPEA2')
+    print_variables_to_file(reference_pareto_front, "VAR." + 'DFOM_SPEA2')
