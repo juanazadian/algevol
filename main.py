@@ -40,11 +40,11 @@ if __name__ == "__main__":
         central_index=CENTRAL_INDEX,
     )
 
-    max_evaluations = 25000
+    max_evaluations = 10000
     algorithm = SPEA2(
         problem=problem,
-        population_size=200,
-        offspring_population_size=200,
+        population_size=50,
+        offspring_population_size=50,
         mutation=GraphMutation(probability=1.0 / problem.number_of_variables, neighborhoods_graph = problem.neighborhoods_graph, distribution_index=20),
         crossover=GraphCrossover(probability=1), # Se puede ajustar esa probabilidad.
         termination_criterion=StoppingByEvaluations(max_evaluations=max_evaluations),
@@ -69,9 +69,9 @@ if __name__ == "__main__":
     df.plot(x = 'x', y = 'y', kind = "scatter", grid = True, legend = True, xlabel = 'cost', ylabel = 'connectivity')
 
     plt.show()
-    make_graph(front[0])
-    make_graph(front[9])
-    make_graph(front[19])
+    # make_graph(front[0])
+    # make_graph(front[9])
+    # make_graph(front[19])
 
 
 

@@ -59,11 +59,11 @@ if __name__ == '__main__':
         central_index = 0,
     )
     jobs = configure_experiment(problems={'DFOM': problem}, n_run=2)
-
     # Run the study
     output_directory = 'try'
     experiment = Experiment(output_dir=output_directory, jobs=jobs)
     experiment.run()
+
 
     generate_summary_from_experiment(
         input_dir=output_directory,
