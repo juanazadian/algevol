@@ -21,16 +21,12 @@ def read_solutions_variables(filename_var):
     return solutions
 
 def read_solutions_objectives(filename: str):
-    solutions = []
+    objective_values = []
     with open(filename) as file:
         for line in file:
             vector = [float(x) for x in line.split()]
-
-            solution = GraphSolution(20, 2, len(vector))
-            solution.objectives = vector
-
-            solutions.append(solution)
-    return solutions
+            objective_values.append(vector)
+    return objective_values
 
 if __name__ == "__main__":
     # print(read_solutions_variables("VAR.PARETO_DFOM_SPEA2"))
