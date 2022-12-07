@@ -20,7 +20,7 @@ from jmetal.lab.visualization import Plot
 from pandas import DataFrame
 import matplotlib.pyplot as plt
 import networkx as nx
-from utils import NEIGHBORHOODS_GRAPH, NEIGHBORHOODS_INFORMATION, REDUCED_NEIGHBORHOODS_GRAPH
+from utils import NEIGHBORHOODS_GRAPH, NEIGHBORHOODS_INFORMATION, REDUCED_NEIGHBORHOODS_GRAPH_1
 
 def make_graph(solution):
     G = nx.Graph()
@@ -36,17 +36,17 @@ if __name__ == "__main__":
 
     problem = DFOM(
         neighborhoods_information=NEIGHBORHOODS_INFORMATION,
-        neighborhoods_graph=REDUCED_NEIGHBORHOODS_GRAPH,
+        neighborhoods_graph=NEIGHBORHOODS_GRAPH,
         central_index=CENTRAL_INDEX,
     )
 
-    max_evaluations = 10000
+    max_evaluations = 15000
     algorithm = SPEA2(
         problem=problem,
         population_size=50,
         offspring_population_size=50,
         mutation=GraphMutation(probability=1.0 / problem.number_of_variables, neighborhoods_graph = problem.neighborhoods_graph, distribution_index=20),
-        crossover=GraphCrossover(probability=1), # Se puede ajustar esa probabilidad.
+        crossover=GraphCrossover(probability=0.75), # Se puede ajustar esa probabilidad.
         termination_criterion=StoppingByEvaluations(max_evaluations=max_evaluations),
     )
 
@@ -62,8 +62,8 @@ if __name__ == "__main__":
 
     print("len de front: ", len(front))
 
-    print_function_values_to_file(front, "FUN." + algorithm.label)
-    print_variables_to_file(front, "VAR." + algorithm.label)
+    # print_function_values_to_file(front, "FUN." + algorithm.label)
+    # print_variables_to_file(front, "VAR." + algorithm.label)
 
     df = Plot.get_points(front)[0].rename(columns={0: "x", 1: "y"})
     df.plot(x = 'x', y = 'y', kind = "scatter", grid = True, legend = True, xlabel = 'cost', ylabel = 'connectivity')

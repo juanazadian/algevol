@@ -14,7 +14,7 @@ from jmetal.operator import PolynomialMutation, SBXCrossover
 from jmetal.problem import ZDT1, ZDT2, ZDT3
 from jmetal.util.archive import CrowdingDistanceArchive
 from jmetal.util.termination_criterion import StoppingByEvaluations
-from utils import NEIGHBORHOODS_INFORMATION, REDUCED_NEIGHBORHOODS_GRAPH
+from utils import NEIGHBORHOODS_INFORMATION, REDUCED_NEIGHBORHOODS_GRAPH_1
 
 
 from problem import DFOM
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     # Configure the experiments
     problem = DFOM(
         neighborhoods_information = NEIGHBORHOODS_INFORMATION,
-        neighborhoods_graph = REDUCED_NEIGHBORHOODS_GRAPH,
+        neighborhoods_graph = REDUCED_NEIGHBORHOODS_GRAPH_1,
         central_index = 0,
     )
     jobs = configure_experiment(problems={'DFOM': problem}, n_run=2)
