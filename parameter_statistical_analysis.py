@@ -66,7 +66,7 @@ def mutcross_adjustment():
     print(rank_test(all_executions_values))
 
 def population_adjustment():
-    population_sizes = [50, 124, 200]
+    population_sizes = [20, 40, 60]
     all_executions_values = {}
     reference_pareto = read_solutions_objectives('population_size_adjustment/reference/FUN.PARETO_DFOM_SPEA2')
     hypervolume = HyperVolume(nadir(reference_pareto))

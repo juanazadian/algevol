@@ -24,13 +24,13 @@ import multiprocessing as mp
 
 results = []
 
-def run_problem(mutation_probability, crossover_probability, population_size, run, graph = REDUCED_NEIGHBORHOODS_GRAPH, central_index = 0):
+def run_problem(mutation_probability, crossover_probability, population_size, run, graph = REDUCED_NEIGHBORHOODS_GRAPH, central_index = 10):
     problem = DFOM(
         neighborhoods_information=NEIGHBORHOODS_INFORMATION,
         neighborhoods_graph=graph,
         central_index=central_index,
     )
-    max_evaluations = 15000
+    max_evaluations = 25000
     algorithm = SPEA2(
         problem=problem,
         population_size=population_size,
@@ -54,13 +54,13 @@ def collect_result(result):
     results.append(result)
 
 if __name__ == "__main__":
-    population_sizes = [50, 124, 200]
+    population_sizes = [20, 40, 60]
     pool = mp.Pool(mp.cpu_count())
 
     solutions = []
     for population_size in population_sizes:
         for n in range(30):
-            pool.apply_async(run_problem, args=(0.01, 1, 50, n), callback = collect_result)
+            pool.apply_async(run_problem, args=(0.01, 1, population_size, n), callback = collect_result)
 
     pool.close()
     pool.join()
