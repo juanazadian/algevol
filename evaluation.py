@@ -1,6 +1,7 @@
 #!/bin/env python
 
 from jmetal.algorithm.multiobjective.spea2 import SPEA2
+from jmetal.algorithm.multiobjective.nsgaii import NSGAII
 
 from jmetal.util.termination_criterion import StoppingByEvaluations
 
@@ -14,7 +15,7 @@ from jmetal.lab.visualization import Plot
 from pandas import DataFrame
 import matplotlib.pyplot as plt
 import networkx as nx
-from utils import NEIGHBORHOODS_INFORMATION, REDUCED_NEIGHBORHOODS_GRAPH
+from utils import NEIGHBORHOODS_INFORMATION, NEIGHBORHOODS_GRAPH
 from jmetal.util.solution import (
     print_function_values_to_file,
     print_variables_to_file,
@@ -24,14 +25,14 @@ import multiprocessing as mp
 
 results = []
 
-def run_problem(mutation_probability, crossover_probability, population_size, run, graph = REDUCED_NEIGHBORHOODS_GRAPH, central_index = 0):
+def run_problem(mutation_probability, crossover_probability, population_size, run, graph = NEIGHBORHOODS_GRAPH, central_index = 40):
     problem = DFOM(
         neighborhoods_information=NEIGHBORHOODS_INFORMATION,
         neighborhoods_graph=graph,
         central_index=central_index,
     )
     max_evaluations = 15000
-    algorithm = SPEA2(
+    experiment = algorithm(
         problem=problem,
         population_size=population_size,
         offspring_population_size=population_size,
@@ -39,13 +40,13 @@ def run_problem(mutation_probability, crossover_probability, population_size, ru
         crossover=GraphCrossover(probability=crossover_probability),
         termination_criterion=StoppingByEvaluations(max_evaluations=max_evaluations),
     )
-    algorithm.run()
-    print(f"Algorithm: {algorithm.get_name()}")
+    experiment.run()
+    print(f"Algorithm: {experiment.get_name()}")
     print(f"Problem: {problem.get_name()}")
     print(f"Computing time: {algorithm.total_computing_time}")
     solutions = algorithm.get_result()
-    print_function_values_to_file(solutions, f'FUN.MUT_{mutation_probability}-CROSS_{crossover_probability}-RUN_{run}')
-    print_variables_to_file(solutions, f'VAR.MUT_{mutation_probability}-CROSS_{crossover_probability}-RUN_{run}')
+    print_function_values_to_file(solutions, f'FUN.{experiment.get_name()}-RUN_{run}')
+    print_variables_to_file(solutions, f'VAR.{experiment.get_name()}-RUN_{run}')
 
     return solutions
 
@@ -54,16 +55,16 @@ def collect_result(result):
     results.append(result)
 
 if __name__ == "__main__":
-    mutation_probabilities = [0.001, 0.01, 0.1]
-    crossover_probabilities = [0.5, 0.75, 1]
-    # population_sizes = [50, 125, 200]
+    population_sizes = [50, 124, 200]
     pool = mp.Pool(mp.cpu_count())
 
     solutions = []
-    for mutation_probability in mutation_probabilities:
-        for crossover_probability in crossover_probabilities:
+    algorithms = [SPEA2, NSGAII]
+    graphs = [NEIGHBORHOODS_GRAPH]
+    for algorithm in algorithms:
+        for population_size in population_sizes:
             for n in range(30):
-                pool.apply_async(run_problem, args=(mutation_probability, crossover_probability, 50, n), callback = collect_result)
+                pool.apply_async(run_problem, args=(0.01, 1.0, population_size, n), callback = collect_result)
 
     pool.close()
     pool.join()

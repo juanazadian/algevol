@@ -15,8 +15,37 @@ def statistics(data):
     return np.mean(np_data), np.std(np_data)
 
 def nadir(pareto):
-    data = np.array(reference_pareto)
+    data = np.array(pareto)
     return [data[:,0].max(), data[:,1].max()]
+
+def sort_by_run(all_executions_values, n_run):
+    n_values = []
+    for key in all_executions_values:
+        n_values.append((key, all_executions_values[key][n_run]))
+    n_values = sorted(n_values, key=lambda x: x[1], reverse=True)
+    return n_values
+
+def ranking_in(positions, key):
+    element = [element for element in positions if element[0] == key][0]
+    return positions.index(element)
+
+
+def rank_test(all_executions_values):
+    key_ranks = {}
+
+    for key in all_executions_values.keys():
+        key_ranks[key] = 0
+
+    for n_run in range(30):
+        sorted_n_run = sort_by_run(all_executions_values, n_run)
+        for key in all_executions_values.keys():
+            key_ranks[key] += ranking_in(sorted_n_run, key)
+
+    for key in all_executions_values.keys():
+        key_ranks[key] = key_ranks[key] / 30
+
+    return key_ranks
+
 
 if __name__ == "__main__":
     mutation_probabilities = [0.001, 0.01, 0.1]
@@ -38,6 +67,8 @@ if __name__ == "__main__":
                 execution_hypervolume = hypervolume.compute(execution_solutions)
                 all_executions_values[key].append(execution_hypervolume / pareto_hypervolume)
             all_executions_statistics[key].append(statistics(all_executions_values[key]))
-            print("KS: ",kstest(all_executions_values[key], "norm"))
-    print(all_executions_statistics)
+            # print("KS: ",kstest(all_executions_values[key], "norm"))
+    # print(all_executions_values)
+
+    print(rank_test(all_executions_values))
 

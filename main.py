@@ -20,7 +20,7 @@ from jmetal.lab.visualization import Plot
 from pandas import DataFrame
 import matplotlib.pyplot as plt
 import networkx as nx
-from utils import NEIGHBORHOODS_GRAPH, NEIGHBORHOODS_INFORMATION, REDUCED_NEIGHBORHOODS_GRAPH_1
+from utils import NEIGHBORHOODS_GRAPH, NEIGHBORHOODS_INFORMATION, REDUCED_NEIGHBORHOODS_GRAPH
 
 def make_graph(solution):
     G = nx.Graph()
@@ -30,7 +30,7 @@ def make_graph(solution):
     nx.draw(G, with_labels=True, font_weight='bold')
     plt.show()
 
-CENTRAL_INDEX = 0
+CENTRAL_INDEX = 40
 
 if __name__ == "__main__":
 
@@ -40,13 +40,13 @@ if __name__ == "__main__":
         central_index=CENTRAL_INDEX,
     )
 
-    max_evaluations = 15000
+    max_evaluations = 20000
     algorithm = SPEA2(
         problem=problem,
         population_size=50,
-        offspring_population_size=50,
-        mutation=GraphMutation(probability=1.0 / problem.number_of_variables, neighborhoods_graph = problem.neighborhoods_graph, distribution_index=20),
-        crossover=GraphCrossover(probability=0.75), # Se puede ajustar esa probabilidad.
+        offspring_population_size=124,
+        mutation=GraphMutation(probability=0.001, neighborhoods_graph = problem.neighborhoods_graph, distribution_index=20),
+        crossover=GraphCrossover(probability=1), # Se puede ajustar esa probabilidad.
         termination_criterion=StoppingByEvaluations(max_evaluations=max_evaluations),
     )
 

@@ -103,7 +103,7 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
     def __sum_solution_connectivity(self, solution):
         sum = 0
         connected_nodes = []
-        dfs(connected_nodes, solution.variables, 0)
+        dfs(connected_nodes, solution.variables, self.central_index)
         for node in connected_nodes:
             sum += [nbh[2] for nbh in self.neighborhoods_information if nbh[0] == node][0]
         return sum
