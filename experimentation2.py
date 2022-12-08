@@ -25,7 +25,7 @@ def configure_experiment(problems: dict, n_run: int):
 
     mutation_probabilities = [0.001, 0.01, 0.1]
     crossover_probabilities = [0.5, 0.75, 1]
-    population_sizes = [50, 125, 200]
+    population_sizes = [20, 40, 60]
     for mutation_probability in mutation_probabilities:
         for crossover_probability in crossover_probabilities:
             for population_size in population_sizes:
