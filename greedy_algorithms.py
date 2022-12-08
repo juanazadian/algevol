@@ -30,16 +30,21 @@ def max_connectivity(neighbours):
     maximum = max(populations, key=lambda tup: tup[2])
     return maximum[0]
 
-if __name__ == "__main__":
+def min_cost_greedy(graph = NEIGHBORHOODS_GRAPH, central_index=CENTRAL_INDEX):
     min_cost_greedy_solution = []
     solution_cost = [0]
-    mod_dfs(min_cost_greedy_solution, NEIGHBORHOODS_GRAPH, CENTRAL_INDEX, min_distance, solution_cost)
-
+    mod_dfs(min_cost_greedy_solution, graph, central_index, min_distance, solution_cost)
     min_cost_greedy_values = [solution_cost[0], sum_solution_connectivity(min_cost_greedy_solution)]
-    print(min_cost_greedy_values)
+    return min_cost_greedy_values
 
+def max_conn_greedy(graph = NEIGHBORHOODS_GRAPH, central_index=CENTRAL_INDEX):
     max_conn_greedy_solution = []
     solution_cost = [0]
-    mod_dfs(max_conn_greedy_solution, NEIGHBORHOODS_GRAPH, CENTRAL_INDEX, max_connectivity, solution_cost)
+    mod_dfs(max_conn_greedy_solution, graph, central_index, max_connectivity, solution_cost)
     max_conn_greedy_values = [solution_cost[0], sum_solution_connectivity(max_conn_greedy_solution)]
-    print(max_conn_greedy_values)
+    return max_conn_greedy_values
+
+
+if __name__ == "__main__":
+    min_cost_greedy()
+    max_conn_greedy()

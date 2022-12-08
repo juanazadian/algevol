@@ -1,6 +1,7 @@
 from pathlib import Path
 import ast
 from solution import GraphSolution
+
 from jmetal.util.solution import read_solutions
 
 """ Reads a reference front from a file.
