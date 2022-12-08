@@ -59,13 +59,13 @@ if __name__ == "__main__":
 
     solutions = []
     algorithms = [SPEA2, NSGAII]
-    instances = [(NEIGHBORHOODS_GRAPH, 40), (FIRST_31_GRAPH, 40), (LAST_31_GRAPH, 40), (FIRST_31_GRAPH, 30), (LAST_31_GRAPH, 30)]
+    instances = [(NEIGHBORHOODS_GRAPH, 40), (FIRST_31_GRAPH, 15), (LAST_31_GRAPH, 15), (FIRST_31_GRAPH, 25), (LAST_31_GRAPH, 25)]
     for instance in instances:
         graph = instance[0]
         central_location = instance[1]
         for algorithm in algorithms:
             for n in range(1):
-                pool.apply_async(run_problem, args=(0.01, 1.0, 50, n, graph, central_location), callback = collect_result)
+                pool.apply_async(run_problem, args=(0.001, 1.0, 40, n, graph, central_location), callback = collect_result)
 
     pool.close()
     pool.join()
