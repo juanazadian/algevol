@@ -68,6 +68,7 @@ def mutcross_adjustment():
 def population_adjustment():
     population_sizes = [20, 40, 60]
     all_executions_values = {}
+    all_executions_statistics = {}
     reference_pareto = read_solutions_objectives('population_size_adjustment/reference/FUN.PARETO_DFOM_SPEA2')
     hypervolume = HyperVolume(nadir(reference_pareto))
     pareto_hypervolume = hypervolume.compute(reference_pareto)
@@ -75,15 +76,20 @@ def population_adjustment():
     for population_size in population_sizes:
             key = f'POP_{population_size}'
             all_executions_values[key] = []
+            all_executions_statistics[key] = []
             for n in range(30):
                 filename_fun = f'population_size_adjustment/fun/FUN.POP_{population_size}-RUN_{n}'
                 execution_solutions = read_solutions_objectives(filename_fun)
                 execution_hypervolume = hypervolume.compute(execution_solutions)
                 all_executions_values[key].append(execution_hypervolume / pareto_hypervolume)
-            # print("KS: ",kstest(all_executions_values[key], "norm"))
+            all_executions_statistics[key] = statistics(all_executions_values[key])
+            # print("KS: ",kstest(all_executionss_values[key], "norm"))
+    print(all_executions_statistics)
     print(rank_test(all_executions_values))
 
 if __name__ == "__main__":
-    mutcross_adjustment()
+    # mutcross_adjustment()
+    # print(all_executions_statistics)
+    # print(all_executions_values)
     population_adjustment()
 
