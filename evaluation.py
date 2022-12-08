@@ -23,9 +23,15 @@ from jmetal.util.solution import (
 
 import multiprocessing as mp
 
-results = []
+results = {
+    "NEIGHBORHOODS_GRAPH_CENTRAL_40": [],
+    "FIRST_31_GRAPH_CENTRAL_15": [],
+    "FIRST_31_GRAPH_CENTRAL_20": [],
+    "FIRST_31_GRAPH_CENTRAL_25": [],
+    "FIRST_31_GRAPH_CENTRAL_30": [],
+}
 
-def run_spea(mutation_probability, crossover_probability, population_size, run, graph = NEIGHBORHOODS_GRAPH, central_index = 40):
+def run_spea(mutation_probability, crossover_probability, population_size, run, graph, central_index, instance_name):
     problem = DFOM(
         neighborhoods_information=NEIGHBORHOODS_INFORMATION,
         neighborhoods_graph=graph,
@@ -47,12 +53,12 @@ def run_spea(mutation_probability, crossover_probability, population_size, run, 
     print(f"Algorithm: {experiment.get_name()}")
     print(f"Computing time: {experiment.total_computing_time}")
     solutions = experiment.get_result()
-    print_function_values_to_file(solutions, f'evaluation/fun/FUN.{experiment.get_name()}-RUN_{run}')
-    print_variables_to_file(solutions, f'evaluation/var/VAR.{experiment.get_name()}-RUN_{run}')
+    print_function_values_to_file(solutions, f'evaluation/fun/FUN.{instance_name}-{experiment.get_name()}-RUN_{run}')
+    print_variables_to_file(solutions, f'evaluation/var/VAR.{instance_name}-{experiment.get_name()}-RUN_{run}')
 
-    return solutions
+    return (solutions, instance_name)
 
-def run_nsga(mutation_probability, crossover_probability, population_size, run, graph = NEIGHBORHOODS_GRAPH, central_index = 40):
+def run_nsga(mutation_probability, crossover_probability, population_size, run, graph, central_index, instance_name):
     problem = DFOM(
         neighborhoods_information=NEIGHBORHOODS_INFORMATION,
         neighborhoods_graph=graph,
@@ -74,34 +80,44 @@ def run_nsga(mutation_probability, crossover_probability, population_size, run, 
     print(f"Algorithm: {experiment.get_name()}")
     print(f"Computing time: {experiment.total_computing_time}")
     solutions = experiment.get_result()
-    print_function_values_to_file(solutions, f'evaluation/fun/FUN.{experiment.get_name()}-RUN_{run}')
-    print_variables_to_file(solutions, f'evaluation/var/VAR.{experiment.get_name()}-RUN_{run}')
+    print_function_values_to_file(solutions, f'evaluation/fun/FUN.{instance_name}-{experiment.get_name()}-RUN_{run}')
+    print_variables_to_file(solutions, f'evaluation/var/VAR.{instance_name}-{experiment.get_name()}-RUN_{run}')
 
-    return solutions
+    return (solutions, instance_name)
 
 def collect_result(result):
     global results
-    results.append(result)
+    results[result[1]].append(result[0])
 
 if __name__ == "__main__":
     pool = mp.Pool(mp.cpu_count())
 
     solutions = []
 
-    instances = [(NEIGHBORHOODS_GRAPH, 40), (FIRST_31_GRAPH, 15), (LAST_31_GRAPH, 15), (FIRST_31_GRAPH, 25), (LAST_31_GRAPH, 25)]
+    instances = [
+        (NEIGHBORHOODS_GRAPH, 40, "NEIGHBORHOODS_GRAPH_CENTRAL_40"),
+        (FIRST_31_GRAPH, 15, "FIRST_31_GRAPH_CENTRAL_15"),
+        (FIRST_31_GRAPH, 20, "FIRST_31_GRAPH_CENTRAL_20"),
+        (FIRST_31_GRAPH, 25, "FIRST_31_GRAPH_CENTRAL_25"),
+        (FIRST_31_GRAPH, 30, "FIRST_31_GRAPH_CENTRAL_30")
+    ]
     for instance in instances:
         graph = instance[0]
         central_location = instance[1]
-        for n in range(30):
-            pool.apply_async(run_spea, args=(0.001, 1.0, 40, n, graph, central_location), callback = collect_result)
-            pool.apply_async(run_nsga, args=(0.001, 1.0, 40, n, graph, central_location), callback = collect_result)
+        instance_name = instance[2]
+        print(instance_name)
+        for n in range(1):
+            pool.apply_async(run_spea, args=(0.001, 1.0, 40, n, graph, central_location, instance_name), callback = collect_result)
+            pool.apply_async(run_nsga, args=(0.001, 1.0, 40, n, graph, central_location, instance_name), callback = collect_result)
 
     pool.close()
     pool.join()
 
-    flat_list = [item for sublist in results for item in sublist]
+    for result in results:
+        print("result", result)
+        actual_results = results[result]
+        flat_list = [item for sublist in actual_results for item in sublist]
+        reference_pareto_front = get_non_dominated_solutions(flat_list)
+        print_function_values_to_file(reference_pareto_front, f'evaluation/FUN.PARETO_DFOM_SPEA2-{result}')
+        print_variables_to_file(reference_pareto_front, f'evaluation/VAR.PARETO_DFOM_SPEA2-{result}')
 
-    reference_pareto_front = get_non_dominated_solutions(flat_list)
-    print("pareto: ", reference_pareto_front)
-    print_function_values_to_file(reference_pareto_front, "evaluation/FUN." + 'PARETO_DFOM_SPEA2')
-    print_variables_to_file(reference_pareto_front, "evaluation/VAR." + 'PARETO_DFOM_SPEA2')

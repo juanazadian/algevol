@@ -42,7 +42,7 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
     def __centric_solution_init_method(self, solution: GraphSolution):
         # Este metodo inicializa la solucion con barrios centricos.
         N=4
-        self.__recursive_generate_centric_solution(solution, N, [0], [])
+        self.__recursive_generate_centric_solution(solution, N, [self.central_index], [])
 
     # --------  Deep solutions initialization methods ----------
 
@@ -69,7 +69,7 @@ class DFOM(Problem[GraphSolution], ABC): # DFOM: Distribucion Fibra Optica Monte
     def __deep_solutions_init_method(self, solution: GraphSolution):
         # Este metodo inicializa la solucion con grafos extensos.
         N = round(len(self.neighborhoods_graph) / 2)
-        self.__recursive_generate_deep_solution(solution, N, [0], [])
+        self.__recursive_generate_deep_solution(solution, N, [self.central_index], [])
 
     # ---------------------------------------------------------------
 
