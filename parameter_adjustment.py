@@ -44,8 +44,8 @@ def run_problem(mutation_probability, crossover_probability, population_size, ru
     print(f"Problem: {problem.get_name()}")
     print(f"Computing time: {algorithm.total_computing_time}")
     solutions = algorithm.get_result()
-    print_function_values_to_file(solutions, f'parameter_adjustment/FUN.MUT_{mutation_probability}-CROSS_{crossover_probability}-RUN_{run}')
-    print_variables_to_file(solutions, f'parameter_adjustment/VAR.MUT_{mutation_probability}-CROSS_{crossover_probability}-RUN_{run}')
+    print_function_values_to_file(solutions, f'parameter_adjustment/fun/FUN.MUT_{mutation_probability}-CROSS_{crossover_probability}-RUN_{run}')
+    print_variables_to_file(solutions, f'parameter_adjustment/var/VAR.MUT_{mutation_probability}-CROSS_{crossover_probability}-RUN_{run}')
 
     return solutions
 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     for mutation_probability in mutation_probabilities:
         for crossover_probability in crossover_probabilities:
             for n in range(30):
-                pool.apply_async(run_problem, args=(mutation_probability, crossover_probability, 20, n), callback = collect_result)
+                pool.apply_async(run_problem, args=(mutation_probability, crossover_probability, 40, n), callback = collect_result)
 
     pool.close()
     pool.join()
@@ -71,5 +71,5 @@ if __name__ == "__main__":
 
     reference_pareto_front = get_non_dominated_solutions(flat_list)
     print("pareto: ", reference_pareto_front)
-    print_function_values_to_file(reference_pareto_front, "FUN." + 'PARETO_DFOM_SPEA2')
-    print_variables_to_file(reference_pareto_front, "VAR." + 'PARETO_DFOM_SPEA2')
+    print_function_values_to_file(reference_pareto_front, "FUN." + 'parameter_adjustment/reference/PARETO_DFOM_SPEA2')
+    print_variables_to_file(reference_pareto_front, "VAR." + 'parameter_adjustment/reference/PARETO_DFOM_SPEA2')

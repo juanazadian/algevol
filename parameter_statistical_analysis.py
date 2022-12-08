@@ -88,8 +88,8 @@ def population_adjustment():
     print(rank_test(all_executions_values))
 
 if __name__ == "__main__":
-    # mutcross_adjustment()
+    mutcross_adjustment()
     # print(all_executions_statistics)
     # print(all_executions_values)
-    population_adjustment()
+    # population_adjustment()
 
