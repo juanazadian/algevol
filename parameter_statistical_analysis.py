@@ -49,7 +49,7 @@ def mutcross_adjustment():
     mutation_probabilities = [0.001, 0.01, 0.1]
     crossover_probabilities = [0.5, 0.75, 1]
     all_executions_values = {}
-    reference_pareto = read_solutions_objectives('reference/FUN.PARETO_DFOM_SPEA2')
+    reference_pareto = read_solutions_objectives('parameter_adjustment/reference/FUN.PARETO_DFOM_SPEA2')
     hypervolume = HyperVolume(nadir(reference_pareto))
     pareto_hypervolume = hypervolume.compute(reference_pareto)
 
@@ -58,12 +58,11 @@ def mutcross_adjustment():
             key = f'MUT_{mutation_probability}-CROSS_{crossover_probability}'
             all_executions_values[key] = []
             for n in range(30):
-                filename_fun = f'data/fun/FUN.MUT_{mutation_probability}-CROSS_{crossover_probability}-RUN_{n}'
+                filename_fun = f'parameter_adjustment/fun/FUN.MUT_{mutation_probability}-CROSS_{crossover_probability}-RUN_{n}'
                 execution_solutions = read_solutions_objectives(filename_fun)
                 execution_hypervolume = hypervolume.compute(execution_solutions)
                 all_executions_values[key].append(execution_hypervolume / pareto_hypervolume)
-            # print("KS: ",kstest(all_executions_values[key], "norm"))
-    print(rank_test(all_executions_values))
+    return rank_test(all_executions_values)
 
 def population_adjustment():
     population_sizes = [20, 40, 60]
@@ -83,9 +82,25 @@ def population_adjustment():
                 execution_hypervolume = hypervolume.compute(execution_solutions)
                 all_executions_values[key].append(execution_hypervolume / pareto_hypervolume)
             all_executions_statistics[key] = statistics(all_executions_values[key])
-            # print("KS: ",kstest(all_executionss_values[key], "norm"))
-    print(all_executions_statistics)
-    print(rank_test(all_executions_values))
+    return rank_test(all_executions_values)
+
+def obtain_best_configuration(rank_test):
+    min = 10000000000
+    key_res = ''
+    for key in rank_test.keys():
+        if rank_test[key] <= min:
+            min = rank_test[key]
+            key_res = key
+    return key_res
+
+def obtain_best_population_size(rank_test):
+    min = 10000000000
+    key_res = ''
+    for key in rank_test.keys():
+        if rank_test[key] <= min:
+            min = rank_test[key]
+            key_res = key
+    return key_res
 
 if __name__ == "__main__":
     mutcross_adjustment()

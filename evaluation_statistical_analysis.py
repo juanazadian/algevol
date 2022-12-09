@@ -14,7 +14,7 @@ from jmetal.util.solution import get_non_dominated_solutions
 from jmetal.lab.visualization import Plot
 from pandas import DataFrame
 import matplotlib.pyplot as plt
-from scipy.stats import ttest_ind
+from scipy.stats import mannwhitneyu
 
 """ Reads a reference front from a file.
 
@@ -37,7 +37,7 @@ algorithms = ["NSGAII", "SPEA2"]
 
 def statistics(data):
     np_data = np.array(data)
-    return np.mean(np_data), np.std(np_data)
+    return np.mean(np_data), np.std(np_data), np.median(np_data)
 
 def nadir(pareto):
     data = np.array(pareto)
@@ -95,7 +95,6 @@ def evaluation_statistical_analysis():
                 all_executions_values[instance_name][algorithm].append(execution_hypervolume / pareto_hypervolume)
             all_executions_times[instance_name][algorithm] = all_executions_times[instance_name][algorithm] / 30
             all_executions_statistics[instance_name][algorithm] = statistics(all_executions_values[instance_name][algorithm])
-            print("KS: ",kstest(all_executions_values[instance_name][algorithm], "norm"))
 
         # print(all_executions_times)
         # print(all_executions_statistics)
@@ -109,26 +108,41 @@ def evaluation_statistical_analysis():
     # for algorithm in algorithms:
     #     print(f"Rank Promedio en Todas las instancias de {algorithm}: ", all_instances_rank_test[algorithm] / 5)
 
+def study_normal_distributions():
+    for instance in instances:
+        instance_name = instance[2]
+        for algorithm in algorithms:
+            print("Para la instancia: ", instance_name )
+            print("El algoritmo: ", algorithm)
+            print("tiene el siguiente resultado: ")
+            ks_result = kstest(all_executions_values[instance_name][algorithm], "norm")
+            print("KS p-value: ", ks_result.pvalue)
+            if ks_result.pvalue < 0.05:
+                print("Como el p-value es más bajo que 0.05 se observa que las distribuciones no siguen una distribucion normal \n\n")
+            else:
+                print("Como el p-value es mayor 0.05 se observa que las distribuciones siguen una distribucion normal \n\n")
+
 def algorithm_comparison():
     for instance in instances:
         instance_name = instance[2]
         print(f'Evaluando la instancia: {instance_name}')
         print('Se obtienen los siguientes resultados: \n')
-        ttest_results = ttest_ind(all_executions_values[instance_name]['NSGAII'], all_executions_values[instance_name]['SPEA2'])
-        # print(ttest_results.statistic)
-        if ttest_results.pvalue > 0.05: # reject null hypothesis
-            print('Hay diferencia significativa en las medias de los valores obtenidos por los algoritmos')
-            print('las medias fueron:')
-            print('SPEA2:', all_executions_statistics[instance_name]['SPEA2'][0])
-            print('NSGAII:', all_executions_statistics[instance_name]['NSGAII'][0])
-            print('El algoritmo de mayor promedio es: ')
-            if all_executions_statistics[instance_name]['NSGAII'][0] >= all_executions_statistics[instance_name]['SPEA2'][0]:
+        mannwhitneyu_results = mannwhitneyu(all_executions_values[instance_name]['NSGAII'], all_executions_values[instance_name]['SPEA2'], alternative="two-sided")
+        print('p-value: ', mannwhitneyu_results.pvalue)
+        if mannwhitneyu_results.pvalue < 0.05: # reject null hypothesis
+            print('Hay diferencia significativa en las medianas de los valores obtenidos por los algoritmos')
+            print('las medianas fueron:')
+            print('SPEA2:', all_executions_statistics[instance_name]['SPEA2'][2])
+            print('NSGAII:', all_executions_statistics[instance_name]['NSGAII'][2])
+            print('El algoritmo de mayor mediana es: ')
+            mannwhitneyu_greater_results = mannwhitneyu(all_executions_values[instance_name]['NSGAII'], all_executions_values[instance_name]['SPEA2'], alternative="greater")
+            if mannwhitneyu_greater_results.pvalue < 0.05:
                 print('NSGAII \n\n')
             else:
                 print('SPEA2 \n\n')
         else:
-            print('No hay diferencia significativa en las medias de los valores obtenidos por los algoritmos')
-            print('No podemos sacar conclusiones sobre la diferencia en las medias de los algoritmos \n \n')
+            print('No hay diferencia significativa en las medianas de los valores obtenidos por los algoritmos')
+            print('No podemos sacar conclusiones sobre la diferencia en las medianas de los algoritmos \n \n')
 
 def greedy_comparison():
     greedy_values = {}
@@ -146,6 +160,16 @@ def greedy_comparison():
             print("Max conn greedy values: ", greedy_values[instance_name]["max_conn"])
             plt.scatter(greedy_values[instance_name]["min_cost"][0], greedy_values[instance_name]["min_cost"][1], c="red")
             plt.scatter(greedy_values[instance_name]["max_conn"][0], greedy_values[instance_name]["max_conn"][1], c="blue")
+            plt.show()
+
+def print_reference_paretos():
+    for instance in instances:
+        instance_name = instance[2]
+        for algorithm in algorithms:
+            filename_fun = f'evaluation/reference/FUN.PARETO_DFOM_{algorithm}'
+            pareto_front = read_solutions(filename_fun)
+            df = Plot.get_points(pareto_front)[0].rename(columns={0: "x", 1: "y"})
+            df.plot(x = 'x', y = 'y', kind = "scatter", grid = True, legend = True, xlabel = 'cost', ylabel = 'connectivity', title = f'Reference pareto for {instance_name}')
             plt.show()
 
 

@@ -60,11 +60,6 @@ if __name__ == "__main__":
 
     front = get_non_dominated_solutions(solutions)
 
-    print("len de front: ", len(front))
-
-    # print_function_values_to_file(front, "FUN." + algorithm.label)
-    # print_variables_to_file(front, "VAR." + algorithm.label)
-
     df = Plot.get_points(front)[0].rename(columns={0: "x", 1: "y"})
     df.plot(x = 'x', y = 'y', kind = "scatter", grid = True, legend = True, xlabel = 'cost', ylabel = 'connectivity')
 

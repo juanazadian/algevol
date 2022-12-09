@@ -21,5 +21,3 @@ def get_distances():
 
 if __name__ == "__main__":
     get_distances()
-    # solution = [[] for _ in range(6)]
-    # test_deep_solutions(test, solution)

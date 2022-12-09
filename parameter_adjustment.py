@@ -11,9 +11,6 @@ from problem import DFOM
 from mutation import GraphMutation
 from crossover import GraphCrossover
 from jmetal.lab.visualization import Plot
-from pandas import DataFrame
-import matplotlib.pyplot as plt
-import networkx as nx
 from utils import NEIGHBORHOODS_INFORMATION, REDUCED_NEIGHBORHOODS_GRAPH
 from jmetal.util.solution import (
     print_function_values_to_file,
@@ -71,5 +68,5 @@ if __name__ == "__main__":
 
     reference_pareto_front = get_non_dominated_solutions(flat_list)
     print("pareto: ", reference_pareto_front)
-    print_function_values_to_file(reference_pareto_front, "FUN." + 'parameter_adjustment/reference/PARETO_DFOM_SPEA2')
-    print_variables_to_file(reference_pareto_front, "VAR." + 'parameter_adjustment/reference/PARETO_DFOM_SPEA2')
+    print_function_values_to_file(reference_pareto_front, 'parameter_adjustment/reference/FUN.PARETO_DFOM_SPEA2')
+    print_variables_to_file(reference_pareto_front, 'parameter_adjustment/reference/VAR.PARETO_DFOM_SPEA2')

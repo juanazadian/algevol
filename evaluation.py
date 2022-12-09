@@ -125,8 +125,8 @@ if __name__ == "__main__":
         instance_name = instance[2]
         print(instance_name)
         for n in range(30):
-            pool.apply_async(run_spea, args=(0.001, 1.0, 40, n, graph, central_location, instance_name), callback = collect_result)
-            pool.apply_async(run_nsga, args=(0.001, 1.0, 40, n, graph, central_location, instance_name), callback = collect_result)
+            pool.apply_async(run_spea, args=(0.01, 0.75, 40, n, graph, central_location, instance_name), callback = collect_result)
+            pool.apply_async(run_nsga, args=(0.01, 0.75, 40, n, graph, central_location, instance_name), callback = collect_result)
 
     pool.close()
     pool.join()
