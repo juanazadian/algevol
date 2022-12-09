@@ -69,11 +69,8 @@ def rank_test(all_executions_values):
     return key_ranks
 
 def evaluation_statistical_analysis():
-
+    all_instances_rank_test = { 'NSGAII': 0, 'SPEA2': 0}
     all_executions_values = {}
-
-    
-
     for instance in instances:
         instance_name = instance[2]
         reference_pareto = read_solutions_objectives(f'evaluation/FUN.PARETO_DFOM_SPEA2-{instance_name}')
@@ -93,11 +90,16 @@ def evaluation_statistical_analysis():
             print("KS: ",kstest(all_executions_values[instance_name][algorithm], "norm"))
         print(all_executions_statistics)
         print("Instance: ", instance_name)
-        print("Rank Test: ", rank_test(all_executions_values[instance_name]))
+        print(f"Rank Test by Instance {instance_name}: ")
+        rank_test_by_instance = rank_test(all_executions_values[instance_name])
+        for algorithm in algorithms:
+            all_instances_rank_test[algorithm] += rank_test_by_instance[algorithm]
+        print(rank_test(all_executions_values[instance_name]))
+    for algorithm in algorithms:
+        print(f"Rank Promedio en Todas las instancias de {algorithm}: ", all_instances_rank_test[algorithm] / 5)
+
 
 def greedy_comparison():
-    
-
     greedy_values = {}
     for instance in instances:
         instance_name = instance[2]
@@ -108,7 +110,7 @@ def greedy_comparison():
             filename_fun = f'evaluation/alg_pareto/FUN.PARETO_DFOM_{algorithm}-{instance_name}'
             pareto_front = read_solutions(filename_fun)
             df = Plot.get_points(pareto_front)[0].rename(columns={0: "x", 1: "y"})
-            df.plot(x = 'x', y = 'y', kind = "scatter", grid = True, legend = True, xlabel = 'cost', ylabel = 'connectivity')
+            df.plot(x = 'x', y = 'y', kind = "scatter", grid = True, legend = True, xlabel = 'cost', ylabel = 'connectivity', title = f'{instance_name}: Greedy vs {algorithm}')
             print("val", greedy_values[instance_name]["min_cost"])
             plt.scatter(greedy_values[instance_name]["min_cost"][0], greedy_values[instance_name]["min_cost"][1], c="red")
             plt.scatter(greedy_values[instance_name]["max_conn"][0], greedy_values[instance_name]["max_conn"][1], c="blue")
@@ -116,7 +118,6 @@ def greedy_comparison():
 
 
 def get_algorithm_pareto():
-    
     for instance in instances:
         instance_name = instance[2]
         for algorithm in algorithms:

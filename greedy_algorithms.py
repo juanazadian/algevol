@@ -6,7 +6,7 @@ def sum_solution_connectivity(solution):
     sum = 0
     for node in solution:
         sum += [nbh[2] for nbh in NEIGHBORHOODS_INFORMATION if nbh[0] == node][0]
-    return sum
+    return -sum
 
 
 def mod_dfs(visited, graph, node, criterium, cost):
