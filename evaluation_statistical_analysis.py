@@ -1,7 +1,7 @@
 from pathlib import Path
 from jmetal.core.quality_indicator import *
 from solution import GraphSolution
-from solution_parser import read_solutions_objectives, read_solutions_variables
+from solution_parser import read_solutions_objectives, read_solutions_variables, read_execution_time
 from scipy.stats import kstest
 from greedy_algorithms import max_conn_greedy, min_cost_greedy
 from utils import *
@@ -14,6 +14,7 @@ from jmetal.util.solution import get_non_dominated_solutions
 from jmetal.lab.visualization import Plot
 from pandas import DataFrame
 import matplotlib.pyplot as plt
+from scipy.stats import ttest_ind
 
 """ Reads a reference front from a file.
 
@@ -21,6 +22,8 @@ import matplotlib.pyplot as plt
 """
 
 all_executions_statistics = {}
+all_executions_values = {}
+all_executions_times = {}
 
 instances = [
     (NEIGHBORHOODS_GRAPH, 40, "NEIGHBORHOODS_GRAPH_CENTRAL_40"),
@@ -70,34 +73,62 @@ def rank_test(all_executions_values):
 
 def evaluation_statistical_analysis():
     all_instances_rank_test = { 'NSGAII': 0, 'SPEA2': 0}
-    all_executions_values = {}
     for instance in instances:
         instance_name = instance[2]
-        reference_pareto = read_solutions_objectives(f'evaluation/FUN.PARETO_DFOM_SPEA2-{instance_name}')
+        reference_pareto = read_solutions_objectives(f'evaluation/reference_pareto/FUN.PARETO_DFOM_SPEA2-{instance_name}')
         hypervolume = HyperVolume(nadir(reference_pareto))
         pareto_hypervolume = hypervolume.compute(reference_pareto)
         all_executions_values[instance_name] = {}
+        all_executions_times[instance_name] = {}
         all_executions_statistics[instance_name] = {}
         for algorithm in algorithms:
             all_executions_values[instance_name][algorithm] = []
+            all_executions_times[instance_name][algorithm] = 0
             all_executions_statistics[instance_name][algorithm] = []
             for n in range(30):
                 filename_fun = f'evaluation/fun/FUN.{instance_name}-{algorithm}-RUN_{n}'
+                filename_times = f'evaluation/time/TIME.{instance_name}-{algorithm}-RUN_{n}'
                 execution_solutions = read_solutions_objectives(filename_fun)
+                execution_time = read_execution_time(filename_times)
                 execution_hypervolume = hypervolume.compute(execution_solutions)
+                all_executions_times[instance_name][algorithm] += execution_time
                 all_executions_values[instance_name][algorithm].append(execution_hypervolume / pareto_hypervolume)
+            all_executions_times[instance_name][algorithm] = all_executions_times[instance_name][algorithm] / 30
             all_executions_statistics[instance_name][algorithm] = statistics(all_executions_values[instance_name][algorithm])
             print("KS: ",kstest(all_executions_values[instance_name][algorithm], "norm"))
-        print(all_executions_statistics)
-        print("Instance: ", instance_name)
-        print(f"Rank Test by Instance {instance_name}: ")
-        rank_test_by_instance = rank_test(all_executions_values[instance_name])
-        for algorithm in algorithms:
-            all_instances_rank_test[algorithm] += rank_test_by_instance[algorithm]
-        print(rank_test(all_executions_values[instance_name]))
-    for algorithm in algorithms:
-        print(f"Rank Promedio en Todas las instancias de {algorithm}: ", all_instances_rank_test[algorithm] / 5)
 
+        # print(all_executions_times)
+        # print(all_executions_statistics)
+        # print("Instance: ", instance_name)
+        # print(f"Rank Test by Instance {instance_name}: ")
+        # print(rank_test(all_executions_values[instance_name]))
+        # rank_test_by_instance = rank_test(all_executions_values[instance_name])
+        # for algorithm in algorithms:
+        #     all_instances_rank_test[algorithm] += rank_test_by_instance[algorithm]
+
+    # for algorithm in algorithms:
+    #     print(f"Rank Promedio en Todas las instancias de {algorithm}: ", all_instances_rank_test[algorithm] / 5)
+
+def algorithm_comparison():
+    for instance in instances:
+        instance_name = instance[2]
+        print(f'Evaluando la instancia: {instance_name}')
+        print('Se obtienen los siguientes resultados: \n')
+        ttest_results = ttest_ind(all_executions_values[instance_name]['NSGAII'], all_executions_values[instance_name]['SPEA2'])
+        # print(ttest_results.statistic)
+        if ttest_results.pvalue > 0.05: # reject null hypothesis
+            print('Hay diferencia significativa en las medias de los valores obtenidos por los algoritmos')
+            print('las medias fueron:')
+            print('SPEA2:', all_executions_statistics[instance_name]['SPEA2'][0])
+            print('NSGAII:', all_executions_statistics[instance_name]['NSGAII'][0])
+            print('El algoritmo de mayor promedio es: ')
+            if all_executions_statistics[instance_name]['NSGAII'][0] >= all_executions_statistics[instance_name]['SPEA2'][0]:
+                print('NSGAII \n\n')
+            else:
+                print('SPEA2 \n\n')
+        else:
+            print('No hay diferencia significativa en las medias de los valores obtenidos por los algoritmos')
+            print('No podemos sacar conclusiones sobre la diferencia en las medias de los algoritmos \n \n')
 
 def greedy_comparison():
     greedy_values = {}
@@ -111,7 +142,8 @@ def greedy_comparison():
             pareto_front = read_solutions(filename_fun)
             df = Plot.get_points(pareto_front)[0].rename(columns={0: "x", 1: "y"})
             df.plot(x = 'x', y = 'y', kind = "scatter", grid = True, legend = True, xlabel = 'cost', ylabel = 'connectivity', title = f'{instance_name}: Greedy vs {algorithm}')
-            print("val", greedy_values[instance_name]["min_cost"])
+            print("Min cost greedy values: ", greedy_values[instance_name]["min_cost"])
+            print("Max conn greedy values: ", greedy_values[instance_name]["max_conn"])
             plt.scatter(greedy_values[instance_name]["min_cost"][0], greedy_values[instance_name]["min_cost"][1], c="red")
             plt.scatter(greedy_values[instance_name]["max_conn"][0], greedy_values[instance_name]["max_conn"][1], c="blue")
             plt.show()
@@ -131,11 +163,10 @@ def get_algorithm_pareto():
             print_variables_to_file(reference_pareto_front, f'evaluation/alg_pareto/VAR.PARETO_DFOM_{algorithm}-{instance_name}')
 
 if __name__ == "__main__":
-    # print(all_executions_statistics)
-    # print(all_executions_values)
-    # population_adjustment()
-    # evaluation_statistical_analysis()
-    greedy_comparison()
+    evaluation_statistical_analysis()
+    algorithm_comparison()
+    # greedy_comparison()
+    # get_algorithm_pareto()
 
 
 

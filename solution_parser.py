@@ -29,6 +29,12 @@ def read_solutions_objectives(filename: str):
             objective_values.append(vector)
     return objective_values
 
+def read_execution_time(filename: str):
+    with open(filename) as file:
+        for line in file:
+            time = float(line)
+    return time
+
 if __name__ == "__main__":
     # print(read_solutions_variables("VAR.PARETO_DFOM_SPEA2"))
     print(read_solutions_objectives("FUN.PARETO_DFOM_SPEA2"))

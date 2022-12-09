@@ -70,7 +70,7 @@ def run_spea(mutation_probability, crossover_probability, population_size, run, 
     print_time_values_to_file(experiment.total_computing_time, f'evaluation/time/TIME.{instance_name}-{experiment.get_name()}-RUN_{run}')
 
     print_variables_to_file(solutions, f'evaluation/var/VAR.{instance_name}-{experiment.get_name()}-RUN_{run}')
-    
+
     return (solutions, instance_name)
 
 def run_nsga(mutation_probability, crossover_probability, population_size, run, graph, central_index, instance_name):
@@ -96,7 +96,7 @@ def run_nsga(mutation_probability, crossover_probability, population_size, run, 
     print(f"Computing time: {experiment.total_computing_time}")
     solutions = experiment.get_result()
     print_function_values_to_file(solutions, f'evaluation/fun/FUN.{instance_name}-{experiment.get_name()}-RUN_{run}')
-        
+
     print_time_values_to_file(experiment.total_computing_time, f'evaluation/time/TIME.{instance_name}-{experiment.get_name()}-RUN_{run}')
 
     print_variables_to_file(solutions, f'evaluation/var/VAR.{instance_name}-{experiment.get_name()}-RUN_{run}')
@@ -136,6 +136,6 @@ if __name__ == "__main__":
         actual_results = results[result]
         flat_list = [item for sublist in actual_results for item in sublist]
         reference_pareto_front = get_non_dominated_solutions(flat_list)
-        print_function_values_to_file(reference_pareto_front, f'evaluation/referece_pareto/FUN.PARETO_DFOM_SPEA2-{result}')
-        print_variables_to_file(reference_pareto_front, f'evaluation/referece_pareto/VAR.PARETO_DFOM_SPEA2-{result}')
+        print_function_values_to_file(reference_pareto_front, f'evaluation/reference_pareto/FUN.PARETO_DFOM_SPEA2-{result}')
+        print_variables_to_file(reference_pareto_front, f'evaluation/reference_pareto/VAR.PARETO_DFOM_SPEA2-{result}')
 
