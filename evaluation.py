@@ -20,6 +20,8 @@ from jmetal.util.solution import (
     print_function_values_to_file,
     print_variables_to_file,
 )
+import os
+from pathlib import Path
 
 import multiprocessing as mp
 
@@ -30,6 +32,16 @@ results = {
     "FIRST_31_GRAPH_CENTRAL_25": [],
     "FIRST_31_GRAPH_CENTRAL_30": [],
 }
+
+def print_time_values_to_file(time, filename: str):
+    try:
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+    except FileNotFoundError:
+        pass
+
+    with open(filename, 'w') as of:
+        of.write(str(time) )
+        of.write('\n')
 
 def run_spea(mutation_probability, crossover_probability, population_size, run, graph, central_index, instance_name):
     problem = DFOM(
@@ -54,8 +66,11 @@ def run_spea(mutation_probability, crossover_probability, population_size, run, 
     print(f"Computing time: {experiment.total_computing_time}")
     solutions = experiment.get_result()
     print_function_values_to_file(solutions, f'evaluation/fun/FUN.{instance_name}-{experiment.get_name()}-RUN_{run}')
-    print_variables_to_file(solutions, f'evaluation/var/VAR.{instance_name}-{experiment.get_name()}-RUN_{run}')
 
+    print_time_values_to_file(experiment.total_computing_time, f'evaluation/time/TIME.{instance_name}-{experiment.get_name()}-RUN_{run}')
+
+    print_variables_to_file(solutions, f'evaluation/var/VAR.{instance_name}-{experiment.get_name()}-RUN_{run}')
+    
     return (solutions, instance_name)
 
 def run_nsga(mutation_probability, crossover_probability, population_size, run, graph, central_index, instance_name):
@@ -81,6 +96,9 @@ def run_nsga(mutation_probability, crossover_probability, population_size, run, 
     print(f"Computing time: {experiment.total_computing_time}")
     solutions = experiment.get_result()
     print_function_values_to_file(solutions, f'evaluation/fun/FUN.{instance_name}-{experiment.get_name()}-RUN_{run}')
+        
+    print_time_values_to_file(experiment.total_computing_time, f'evaluation/time/TIME.{instance_name}-{experiment.get_name()}-RUN_{run}')
+
     print_variables_to_file(solutions, f'evaluation/var/VAR.{instance_name}-{experiment.get_name()}-RUN_{run}')
 
     return (solutions, instance_name)
@@ -118,6 +136,6 @@ if __name__ == "__main__":
         actual_results = results[result]
         flat_list = [item for sublist in actual_results for item in sublist]
         reference_pareto_front = get_non_dominated_solutions(flat_list)
-        print_function_values_to_file(reference_pareto_front, f'evaluation/FUN.PARETO_DFOM_SPEA2-{result}')
-        print_variables_to_file(reference_pareto_front, f'evaluation/VAR.PARETO_DFOM_SPEA2-{result}')
+        print_function_values_to_file(reference_pareto_front, f'evaluation/referece_pareto/FUN.PARETO_DFOM_SPEA2-{result}')
+        print_variables_to_file(reference_pareto_front, f'evaluation/referece_pareto/VAR.PARETO_DFOM_SPEA2-{result}')
 
