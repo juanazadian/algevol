@@ -36,6 +36,6 @@ if __name__ == "__main__":
     print_reference_paretos()
 
     print('\n\n')
-    print('Puntos interesantes del frente de pareto:')
+    print('Puntos extremos del frente de pareto:')
     print(get_border_solutions_pareto())
     
