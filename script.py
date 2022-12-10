@@ -1,6 +1,6 @@
 from parameter_statistical_analysis import *
 from evaluation_statistical_analysis import *
-
+from helpers import get_border_solutions_pareto
 if __name__ == "__main__":
     print('Se asume que ya han sido corridos los scripts de ejecucion population_size_adjustment.py, parameter_adjustment.py \n\n')
 
@@ -37,4 +37,5 @@ if __name__ == "__main__":
 
     print('\n\n')
     print('Puntos interesantes del frente de pareto:')
+    print(get_border_solutions_pareto())
     

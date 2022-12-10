@@ -30,4 +30,11 @@ def negative_correction(solution):
 
 def get_border_solutions_pareto(pareto_file='evaluation/reference_pareto/FUN.PARETO_DFOM_SPEA2-NEIGHBORHOODS_GRAPH_CENTRAL_40'):
     pareto_front = read_solutions(pareto_file)
-    print("pareto_front ", pareto_front)
+    min_cost = [10000000000, 0]
+    max_conn = [0, 0]
+    for solution in pareto_front:
+        if solution.objectives[0] > 0 and solution.objectives[0] < min_cost[0]:
+            min_cost = solution.objectives
+        if solution.objectives[1] < max_conn[1]:
+            max_conn = solution.objectives
+    return (min_cost, max_conn)
