@@ -165,12 +165,11 @@ def greedy_comparison():
 def print_reference_paretos():
     for instance in instances:
         instance_name = instance[2]
-        for algorithm in algorithms:
-            filename_fun = f'evaluation/reference_pareto/FUN.PARETO_DFOM_SPEA2-{instance_name}'
-            pareto_front = read_solutions(filename_fun)
-            df = Plot.get_points(pareto_front)[0].rename(columns={0: "x", 1: "y"})
-            df.plot(x = 'x', y = 'y', kind = "scatter", grid = True, legend = True, xlabel = 'cost', ylabel = 'connectivity', title = f'Reference pareto for {instance_name}')
-            plt.show()
+        filename_fun = f'evaluation/reference_pareto/FUN.PARETO_DFOM_SPEA2-{instance_name}'
+        pareto_front = read_solutions(filename_fun)
+        df = Plot.get_points(pareto_front)[0].rename(columns={0: "x", 1: "y"})
+        df.plot(x = 'x', y = 'y', kind = "scatter", grid = True, legend = True, xlabel = 'cost', ylabel = 'connectivity', title = f'Reference pareto for {instance_name}')
+        plt.show()
 
 
 def get_algorithm_pareto():
@@ -188,7 +187,7 @@ def get_algorithm_pareto():
 
 if __name__ == "__main__":
     evaluation_statistical_analysis()
-    algorithm_comparison()
+    # algorithm_comparison()
     # greedy_comparison()
     # get_algorithm_pareto()
 

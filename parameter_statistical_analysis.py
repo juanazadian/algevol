@@ -11,7 +11,7 @@ from scipy.stats import kstest
 
 def statistics(data):
     np_data = np.array(data)
-    return np.mean(np_data), np.std(np_data)
+    return np.mean(np_data), np.std(np_data), np.median(np_data)
 
 def nadir(pareto):
     data = np.array(pareto)
@@ -73,15 +73,23 @@ def population_adjustment():
     pareto_hypervolume = hypervolume.compute(reference_pareto)
 
     for population_size in population_sizes:
-            key = f'POP_{population_size}'
-            all_executions_values[key] = []
-            all_executions_statistics[key] = []
-            for n in range(30):
-                filename_fun = f'population_size_adjustment/fun/FUN.POP_{population_size}-RUN_{n}'
-                execution_solutions = read_solutions_objectives(filename_fun)
-                execution_hypervolume = hypervolume.compute(execution_solutions)
-                all_executions_values[key].append(execution_hypervolume / pareto_hypervolume)
-            all_executions_statistics[key] = statistics(all_executions_values[key])
+        key = f'POP_{population_size}'
+        all_executions_values[key] = []
+        all_executions_statistics[key] = []
+        for n in range(30):
+            filename_fun = f'population_size_adjustment/fun/FUN.POP_{population_size}-RUN_{n}'
+            execution_solutions = read_solutions_objectives(filename_fun)
+            execution_hypervolume = hypervolume.compute(execution_solutions)
+            all_executions_values[key].append(execution_hypervolume / pareto_hypervolume)
+        all_executions_statistics[key] = statistics(all_executions_values[key])
+        print(all_executions_statistics[key])
+
+        ks_result = kstest(all_executions_values[key], "norm")
+        print("KS p-value: ", ks_result.pvalue)
+        if ks_result.pvalue < 0.05:
+            print("Como el p-value es más bajo que 0.05 se observa que las distribuciones no siguen una distribucion normal \n\n")
+        else:
+            print("Como el p-value es mayor 0.05 se observa que las distribuciones siguen una distribucion normal \n\n")
     return rank_test(all_executions_values)
 
 def obtain_best_configuration(rank_test):
@@ -107,5 +115,5 @@ if __name__ == "__main__":
     obtain_best_configuration()
     # print(all_executions_statistics)
     # print(all_executions_values)
-    # population_adjustment()
+    print(population_adjustment())
 
