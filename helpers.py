@@ -33,7 +33,7 @@ def get_border_solutions_pareto(pareto_file='evaluation/reference_pareto/FUN.PAR
     min_cost = [10000000000, 0]
     max_conn = [0, 0]
     for solution in pareto_front:
-        if solution.objectives[0] > 0 and solution.objectives[0] < min_cost[0]:
+        if solution.objectives[0] < min_cost[0]:
             min_cost = solution.objectives
         if solution.objectives[1] < max_conn[1]:
             max_conn = solution.objectives
