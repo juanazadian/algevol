@@ -151,16 +151,25 @@ def greedy_comparison():
         greedy_values[instance_name] = {"max_conn": [], "min_cost": []}
         greedy_values[instance_name]["max_conn"] = max_conn_greedy(instance[0], instance[1])
         greedy_values[instance_name]["min_cost"] = min_cost_greedy(instance[0], instance[1])
-        for algorithm in algorithms:
-            filename_fun = f'evaluation/alg_pareto/FUN.PARETO_DFOM_{algorithm}-{instance_name}'
-            pareto_front = read_solutions(filename_fun)
-            df = Plot.get_points(pareto_front)[0].rename(columns={0: "x", 1: "y"})
-            df.plot(x = 'x', y = 'y', kind = "scatter", grid = True, legend = True, xlabel = 'cost', ylabel = 'connectivity', title = f'{instance_name}: Greedy vs {algorithm}')
-            print("Min cost greedy values: ", greedy_values[instance_name]["min_cost"])
-            print("Max conn greedy values: ", greedy_values[instance_name]["max_conn"])
-            plt.scatter(greedy_values[instance_name]["min_cost"][0], greedy_values[instance_name]["min_cost"][1], c="red")
-            plt.scatter(greedy_values[instance_name]["max_conn"][0], greedy_values[instance_name]["max_conn"][1], c="blue")
-            plt.show()
+
+        filename_nsga_fun = f'evaluation/alg_pareto/FUN.PARETO_DFOM_NSGAII-{instance_name}'
+        filename_spea_fun = f'evaluation/alg_pareto/FUN.PARETO_DFOM_SPEA2-{instance_name}'
+        nsga_pareto_front = read_solutions(filename_nsga_fun)
+        spea_pareto_front = read_solutions(filename_spea_fun)
+        nsga_df = np.array(Plot.get_points(nsga_pareto_front)[0])
+        spea_df = np.array(Plot.get_points(spea_pareto_front)[0])
+
+        fig = plt.figure()
+        ax1 = fig.add_subplot(111)
+        ax1.scatter(nsga_df[:,0], nsga_df[:,1], c='g', marker="s", label='NSGA pareto front')
+        ax1.scatter(spea_df[:,0], spea_df[:,1], c='m', marker="o", label='SPEA pareto front')
+
+        print("Min cost greedy values: ", greedy_values[instance_name]["min_cost"])
+        print("Max conn greedy values: ", greedy_values[instance_name]["max_conn"])
+        ax1.scatter(greedy_values[instance_name]["min_cost"][0], greedy_values[instance_name]["min_cost"][1], c="red", label='Min cost greedy solution')
+        ax1.scatter(greedy_values[instance_name]["max_conn"][0], greedy_values[instance_name]["max_conn"][1], c="blue", label='Max conn greedy solution')
+        plt.legend(loc='upper right')
+        plt.show()
 
 def print_reference_paretos():
     for instance in instances:
@@ -188,7 +197,7 @@ def get_algorithm_pareto():
 if __name__ == "__main__":
     evaluation_statistical_analysis()
     # algorithm_comparison()
-    # greedy_comparison()
+    greedy_comparison()
     # get_algorithm_pareto()
 
 
