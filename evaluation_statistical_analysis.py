@@ -26,11 +26,11 @@ all_executions_values = {}
 all_executions_times = {}
 
 instances = [
-    (NEIGHBORHOODS_GRAPH, 40, "NEIGHBORHOODS_GRAPH_CENTRAL_40"),
-    (FIRST_31_GRAPH, 15, "FIRST_31_GRAPH_CENTRAL_15"),
-    (FIRST_31_GRAPH, 20, "FIRST_31_GRAPH_CENTRAL_20"),
-    (FIRST_31_GRAPH, 25, "FIRST_31_GRAPH_CENTRAL_25"),
-    (FIRST_31_GRAPH, 30, "FIRST_31_GRAPH_CENTRAL_30")
+    (NEIGHBORHOODS_GRAPH, 40, "NEIGHBORHOODS_GRAPH_CENTRAL_40", "Instancia 1"),
+    (FIRST_31_GRAPH, 15, "FIRST_31_GRAPH_CENTRAL_15", "Instancia 2"),
+    (FIRST_31_GRAPH, 20, "FIRST_31_GRAPH_CENTRAL_20", "Instancia 3"),
+    (FIRST_31_GRAPH, 25, "FIRST_31_GRAPH_CENTRAL_25", "Instancia 4"),
+    (FIRST_31_GRAPH, 30, "FIRST_31_GRAPH_CENTRAL_30", "Instancia 5")
 ]
 
 algorithms = ["NSGAII", "SPEA2"]
@@ -148,6 +148,7 @@ def greedy_comparison():
     greedy_values = {}
     for instance in instances:
         instance_name = instance[2]
+        title = instance[3]
         greedy_values[instance_name] = {"max_conn": [], "min_cost": []}
         greedy_values[instance_name]["max_conn"] = max_conn_greedy(instance[0], instance[1])
         greedy_values[instance_name]["min_cost"] = min_cost_greedy(instance[0], instance[1])
@@ -169,6 +170,7 @@ def greedy_comparison():
         ax1.scatter(greedy_values[instance_name]["min_cost"][0], greedy_values[instance_name]["min_cost"][1], c="red", label='Min cost greedy solution')
         ax1.scatter(greedy_values[instance_name]["max_conn"][0], greedy_values[instance_name]["max_conn"][1], c="blue", label='Max conn greedy solution')
         plt.legend(loc='upper right')
+        plt.title(f'Greedy algorithms vs {title}')
         plt.show()
 
 def print_reference_paretos():
@@ -179,6 +181,15 @@ def print_reference_paretos():
         df = Plot.get_points(pareto_front)[0].rename(columns={0: "x", 1: "y"})
         df.plot(x = 'x', y = 'y', kind = "scatter", grid = True, legend = True, xlabel = 'cost', ylabel = 'connectivity', title = f'Reference pareto for {instance_name}')
         plt.show()
+
+def print_reference_pareto(instance):
+    instance_name = instance[2]
+    title = instance[3]
+    filename_fun = f'evaluation/reference_pareto/FUN.PARETO_DFOM_SPEA2-{instance_name}'
+    pareto_front = read_solutions(filename_fun)
+    df = Plot.get_points(pareto_front)[0].rename(columns={0: "x", 1: "y"})
+    df.plot(x = 'x', y = 'y', kind = "scatter", grid = True, legend = True, xlabel = 'cost', ylabel = 'connectivity', title = f'Frente de pareto de referencia de la {title}')
+    plt.show()
 
 
 def get_algorithm_pareto():
@@ -195,10 +206,11 @@ def get_algorithm_pareto():
             print_variables_to_file(reference_pareto_front, f'evaluation/alg_pareto/VAR.PARETO_DFOM_{algorithm}-{instance_name}')
 
 if __name__ == "__main__":
-    evaluation_statistical_analysis()
+    # evaluation_statistical_analysis()
     # algorithm_comparison()
-    greedy_comparison()
+    # greedy_comparison()
     # get_algorithm_pareto()
+    print_reference_pareto(instances[0])
 
 
 
