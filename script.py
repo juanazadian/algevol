@@ -31,5 +31,10 @@ if __name__ == "__main__":
     greedy_comparison()
     print('Como se puede observar en las graficas, todos los puntos basados en los resultados de los greedy son dominados por los frente de pareto de los algoritmos \n\n')
 
+    print('\n\n')
     print('los frente de pareto para las instancias son: ')
     print_reference_paretos()
+
+    print('\n\n')
+    print('Puntos interesantes del frente de pareto:')
+    
