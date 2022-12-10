@@ -48,6 +48,7 @@ def get_border_solutions_pareto(
     min_cost_index = -1
     max_conn = [0, 0]
     max_conn_index = -1
+    index_middle=round(len(pareto_front)/2)
     for index, solution in enumerate(pareto_front):
         if solution.objectives[0] > 0 and solution.objectives[0] < min_cost[0]:
             min_cost_index = index
@@ -58,8 +59,10 @@ def get_border_solutions_pareto(
     solutions_var = read_solutions_variables(pareto_var_file)
     min_cost_vars = solutions_var[min_cost_index]
     max_conn_vars = solutions_var[max_conn_index]
+    index_middle_vars = solutions_var[index_middle]
     make_graph(min_cost_vars)
     make_graph(max_conn_vars)
+    make_graph(index_middle_vars)
     # print(min_cost_vars.variables)
     # print(max_conn_vars.variables)
     return (min_cost, max_conn)
