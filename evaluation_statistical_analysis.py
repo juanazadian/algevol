@@ -12,7 +12,6 @@ from jmetal.util.solution import (
 )
 from jmetal.util.solution import get_non_dominated_solutions
 from jmetal.lab.visualization import Plot
-from pandas import DataFrame
 import matplotlib.pyplot as plt
 from scipy.stats import mannwhitneyu
 

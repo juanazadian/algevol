@@ -7,17 +7,10 @@ from jmetal.util.termination_criterion import StoppingByEvaluations
 from jmetal.lab.visualization.plotting import Plot
 from jmetal.util.solution import get_non_dominated_solutions
 
-from jmetal.util.solution import (
-    print_function_values_to_file,
-    print_variables_to_file,
-    read_solutions,
-)
-
 from problem import DFOM
 from mutation import GraphMutation
 from crossover import GraphCrossover
 from jmetal.lab.visualization import Plot
-from pandas import DataFrame
 import matplotlib.pyplot as plt
 from utils import NEIGHBORHOODS_GRAPH, NEIGHBORHOODS_INFORMATION, REDUCED_NEIGHBORHOODS_GRAPH, LAST_31_GRAPH
 from helpers import make_graph

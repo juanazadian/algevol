@@ -8,6 +8,17 @@ Asimismo, al ser un problema multiobjetivo, los AE trabajan de manera muy eficie
 
 Habran muchas soluciones en el frente de Pareto, que van a variar en cantidad de barrios que cubren, y en costo total.
 
+# Dependencias
+Las librerias utilizadas son:
+- nx
+- numpy
+- scipy
+- matplotlib
+- jmetalpy
+
+# Script
+El script a ejecutar es: `script.py` y se ejecuta con `python script.py`
+
 # Descripción del código
 Se armó el código respetando, dentro de lo posible, la estructura de archivos de la libreria `JMetalPY`:
 - un archivo `crossover.py`: en el que se definen las operaciones de cruzamiento de soluciones

@@ -5,16 +5,11 @@ from jmetal.algorithm.multiobjective.nsgaii import NSGAII
 
 from jmetal.util.termination_criterion import StoppingByEvaluations
 
-from jmetal.lab.visualization.plotting import Plot
 from jmetal.util.solution import get_non_dominated_solutions
 
 from problem import DFOM
 from mutation import GraphMutation
 from crossover import GraphCrossover
-from jmetal.lab.visualization import Plot
-from pandas import DataFrame
-import matplotlib.pyplot as plt
-import networkx as nx
 from utils import *
 from jmetal.util.solution import (
     print_function_values_to_file,
