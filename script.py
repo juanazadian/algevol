@@ -14,12 +14,16 @@ if __name__ == "__main__":
     print('rank test: ', rank_test_param_config)
     print('la mejor configuración en promedio es: ', obtain_best_configuration(rank_test_param_config))
 
+    print('\n\n')
     print('Luego con esta configuracion y tamaño de poblacion se debería correr el script de ejecución de las evaluaciones evaluation.py')
     print('En este script se asume que ya ha sido ejecutado el script de evaluacion \n')
 
     evaluation_statistical_analysis()
+
     print('Se estudia la normalidad de las distribuciones para cada algoritmo para cada instancia con el test de Kolmogorov-Smirnov \n\n')
     study_normal_distributions()
+
+    print('Se realiza el test no paramétrico: Mann-Whitney U rank test \n\n')
     algorithm_comparison()
     print('\n\n')
 

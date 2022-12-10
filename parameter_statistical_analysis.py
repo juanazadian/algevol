@@ -103,7 +103,8 @@ def obtain_best_population_size(rank_test):
     return key_res
 
 if __name__ == "__main__":
-    mutcross_adjustment()
+    # mutcross_adjustment()
+    obtain_best_configuration()
     # print(all_executions_statistics)
     # print(all_executions_values)
     # population_adjustment()

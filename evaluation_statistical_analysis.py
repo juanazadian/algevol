@@ -96,8 +96,8 @@ def evaluation_statistical_analysis():
             all_executions_times[instance_name][algorithm] = all_executions_times[instance_name][algorithm] / 30
             all_executions_statistics[instance_name][algorithm] = statistics(all_executions_values[instance_name][algorithm])
 
-        # print(all_executions_times)
-        # print(all_executions_statistics)
+    print("Times \n", all_executions_times)
+    print("Hipervolume Statistics (mean, stddv, median) \n", all_executions_statistics)
         # print("Instance: ", instance_name)
         # print(f"Rank Test by Instance {instance_name}: ")
         # print(rank_test(all_executions_values[instance_name]))
