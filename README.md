@@ -52,4 +52,4 @@ Dentro de esta se encuentran las siguientes sub-carpetas:
 - `var`: con las listas de adyacencia para recrear las soluciones
 - `time`: con los tiempos de ejecución de cada ejecución
 - `reference_pareto`: con el frente de pareto de referencia para cada instancia utilizado en la evaluación para calcular las métricas (Hipervolumen Relativo)
-- `reference_pareto`: con los frente de pareto de referencia para cada instancia para cada algoritmo utilizado para comparar los algoritmos frente a los greedy
+- `alg_pareto`: con los frente de pareto de referencia para cada instancia para cada algoritmo utilizado para comparar los algoritmos frente a los greedy
