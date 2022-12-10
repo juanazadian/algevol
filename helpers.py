@@ -49,7 +49,7 @@ def get_border_solutions_pareto(
     max_conn = [0, 0]
     max_conn_index = -1
     for index, solution in enumerate(pareto_front):
-        if solution.objectives[0] < min_cost[0]:
+        if solution.objectives[0] > 0 and solution.objectives[0] < min_cost[0]:
             min_cost_index = index
             min_cost = solution.objectives
         if solution.objectives[1] < max_conn[1]:
