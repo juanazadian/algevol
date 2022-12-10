@@ -4,6 +4,17 @@ from jmetal.util.solution import (
     print_function_values_to_file,
     print_variables_to_file,
 )
+import matplotlib.pyplot as plt
+import networkx as nx
+from solution_parser import read_solutions_variables
+
+def make_graph(solution):
+    G = nx.Graph()
+    for index, node in enumerate(solution.variables):
+        for nbh in node:
+            G.add_edge(index, nbh)
+    nx.draw(G, with_labels=True, font_weight='bold')
+    plt.show()
 
 def dfs(visited, graph, node):
     if node not in visited:
@@ -28,13 +39,27 @@ def negative_correction(solution):
     return res
 
 
-def get_border_solutions_pareto(pareto_file='evaluation/reference_pareto/FUN.PARETO_DFOM_SPEA2-NEIGHBORHOODS_GRAPH_CENTRAL_40'):
-    pareto_front = read_solutions(pareto_file)
+def get_border_solutions_pareto(
+    pareto_fun_file='evaluation/reference_pareto/FUN.PARETO_DFOM_SPEA2-NEIGHBORHOODS_GRAPH_CENTRAL_40',
+    pareto_var_file='evaluation/reference_pareto/VAR.PARETO_DFOM_SPEA2-NEIGHBORHOODS_GRAPH_CENTRAL_40',
+):
+    pareto_front = read_solutions(pareto_fun_file)
     min_cost = [10000000000, 0]
+    min_cost_index = -1
     max_conn = [0, 0]
-    for solution in pareto_front:
+    max_conn_index = -1
+    for index, solution in enumerate(pareto_front):
         if solution.objectives[0] < min_cost[0]:
+            min_cost_index = index
             min_cost = solution.objectives
         if solution.objectives[1] < max_conn[1]:
+            max_conn_index = index
             max_conn = solution.objectives
+    solutions_var = read_solutions_variables(pareto_var_file)
+    min_cost_vars = solutions_var[min_cost_index]
+    max_conn_vars = solutions_var[max_conn_index]
+    make_graph(min_cost_vars)
+    make_graph(max_conn_vars)
+    # print(min_cost_vars.variables)
+    # print(max_conn_vars.variables)
     return (min_cost, max_conn)

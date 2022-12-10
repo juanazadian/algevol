@@ -19,16 +19,8 @@ from crossover import GraphCrossover
 from jmetal.lab.visualization import Plot
 from pandas import DataFrame
 import matplotlib.pyplot as plt
-import networkx as nx
 from utils import NEIGHBORHOODS_GRAPH, NEIGHBORHOODS_INFORMATION, REDUCED_NEIGHBORHOODS_GRAPH, LAST_31_GRAPH
-
-def make_graph(solution):
-    G = nx.Graph()
-    for index, node in enumerate(solution.variables):
-        for nbh in node:
-            G.add_edge(index, nbh)
-    nx.draw(G, with_labels=True, font_weight='bold')
-    plt.show()
+from helpers import make_graph
 
 CENTRAL_INDEX = 40
 
